@@ -6,7 +6,6 @@ def load_json_file(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-
 # デッキリストからカード情報を取得
 def get_card_info(deck, all_cards):
     deck_info = []
