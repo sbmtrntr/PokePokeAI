@@ -2,19 +2,20 @@ import json
 import random
 
 # JSONファイルをロード
-def load_cards_status(file_path):
+def load_json_file(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
+
 
 # デッキリストからカード情報を取得
 def get_card_info(deck, all_cards):
     deck_info = []
-    for card_name in deck:
-        card = next((c for c in all_cards if c["name"] == card_name), None)
+    for card_id in deck:
+        card = next((c for c in all_cards if c["id"] == card_id), None)
         if card:
             deck_info.append(card)
         else:
-            print(f"Warning: Card '{card_name}' not found in the dataset.")
+            print(f"Warning: Card '{card_id}' not found in the dataset.")
     return deck_info
 
 # デッキ情報からランダムにたねポケモンを選ぶ
@@ -41,8 +42,9 @@ def get_initial_hand(hand, deck_info):
     return hand
 
 def debug_print(hand, deck_info):
+    print("---手札---")
     for card in hand:
         print(card["name"])
-    print("---")
+    print("---山札---")
     for card in deck_info:
         print(card["name"])

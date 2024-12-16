@@ -8909,8 +8909,8 @@
         "id": "PA-004", 
         "category": "トレーナーズ", 
         "subCategory": "グッズ", 
-        "name": "ハンドスコープ", 
-        "text": "相手の手札のオモテをすべて見る。", 
+        "name": "ポケモン図鑑", 
+        "text": "自分の山札を上から３枚見て、もとにもどす。", 
         "set": {
             "name": "ショップ", 
             "releaseDate": "2024/10/30"
@@ -8953,5 +8953,498 @@
         }, 
         "rarity": 2, 
         "tags": "ドロー"
+    },
+
+    {
+        "id": "PA-009",
+        "category": "ポケモン",
+        "name": "ピカチュウ",
+        "stage": "たね",
+        "type": "雷",
+        "weakness": "闘",
+        "hp": 60,
+        "attacks": [
+            {
+                "name": "かじる",
+                "damage": 20,
+                "cost": {
+                    "雷": 1
+                },
+                "convertedEnergyCost": 1
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "プレミアムパス",
+            "releaseDate": "2024/10/30"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-010",
+        "category": "ポケモン",
+        "name": "ミュウツー",
+        "stage": "たね",
+        "type": "超",
+        "weakness": "悪",
+        "hp": 120,
+        "attacks": [
+            {
+                "name": "パワーブラスト",
+                "damage": 120,
+                "cost": {
+                    "超": 2,
+                    "無": 2
+                },
+                "text": "このポケモンから超エネルギーを2個トラッシュ。",
+                "convertedEnergyCost": 4
+            }
+        ],
+        "retreatCost": {
+            "無": 2
+        },
+        "convertedRetreatCost": 2,
+        "set": {
+            "name": "プレミアムパス",
+            "releaseDate": "2024/12/09"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-11",
+        "category": "ポケモン",
+        "name": "ラッキー",
+        "stage": "たね",
+        "type": "無",
+        "weakness": "闘",
+        "hp": 120,
+        "attacks": [
+            {
+                "name": "ひっぱたく",
+                "damage": 60,
+                "cost": {
+                    "無": 3
+                },
+                "convertedEnergyCost": 3
+            }
+        ],
+        "retreatCost": {
+            "無": 3
+        },
+        "convertedRetreatCost": 3,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/01",
+            "subName": "ゲットチャレンジイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-012",
+        "category": "ポケモン",
+        "name": "ニャース",
+        "stage": "たね",
+        "type": "無",
+        "weakness": "闘",
+        "hp": 60,
+        "attacks": [
+            {
+                "name": "ネコにこばん",
+                "damage": 10,
+                "cost": {
+                    "無": 1
+                },
+                "text": "自分の山札を1枚引く。",
+                "convertedEnergyCost": 1
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/01",
+            "subName": "ゲットチャレンジイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-013",
+        "category": "ポケモン",
+        "name": "バタフリー",
+        "evolvesFrom": "トランセル",
+        "stage": "2進化",
+        "type": "草",
+        "weakness": "炎",
+        "hp": 120,
+        "attacks": [
+            {
+                "name": "かぜおこし",
+                "damage": 60,
+                "cost": {
+                    "草": 1,
+                    "無": 2
+                },
+                "convertedEnergyCost": 3
+            }
+        ],
+        "ability": [
+            {
+                "name": "パウダーヒール",
+                "text": "自分の番に1回使える。自分のポケモン全員のHPを20回復。"
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/07",
+            "subName": "ラプラスexドロップイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-014",
+        "category": "ポケモン",
+        "cardRule": "ex",
+        "name": "ラプラスex",
+        "stage": "たね",
+        "type": "水",
+        "weakness": "雷",
+        "hp": 140,
+        "attacks": [
+            {
+                "name": "バブルドレイン",
+                "damage": 80,
+                "cost": {
+                    "水": 2,
+                    "無": 1
+                },
+                "text": "このポケモンのHPを20回復。",
+                "convertedEnergyCost": 3
+            }
+        ],
+        "retreatCost": {
+            "無": 3
+        },
+        "convertedRetreatCost": 3,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/07",
+            "subName": "ラプラスexドロップイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-015",
+        "category": "ポケモン",
+        "name": "ピカチュウ",
+        "stage": "たね",
+        "type": "雷",
+        "weakness": "闘",
+        "hp": 60,
+        "attacks": [
+            {
+                "name": "かじる",
+                "damage": 20,
+                "cost": {
+                    "雷": 1
+                },
+                "convertedEnergyCost": 1
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/07",
+            "subName": "ラプラスexドロップイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-016",
+        "category": "ポケモン",
+        "name": "ピッピ",
+        "stage": "たね",
+        "type": "超",
+        "weakness": "鋼",
+        "hp": 60,
+        "attacks": [
+            {
+                "name": "ビンタ",
+                "damage": 20,
+                "cost": {
+                    "超": 1
+                },
+                "convertedEnergyCost": 1
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/07",
+            "subName": "ラプラスexドロップイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-017",
+        "category": "ポケモン",
+        "name": "マンキー",
+        "stage": "たね",
+        "type": "闘",
+        "weakness": "超",
+        "hp": 50,
+        "attacks": [
+            {
+                "name": "とつげき",
+                "damage": 30,
+                "cost": {
+                    "闘": 1
+                },
+                "text": "このポケモンにも10ダメージ。",
+                "convertedEnergyCost": 1
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/07",
+            "subName": "ラプラスexドロップイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-018",
+        "category": "ポケモン",
+        "name": "フシギバナ",
+        "evolvesFrom": "フシギソウ",
+        "stage": "2進化",
+        "type": "草",
+        "weakness": "炎",
+        "hp": 160,
+        "attacks": [
+            {
+                "name": "メガドレイン",
+                "damage": 80,
+                "cost": {
+                    "草": 2,
+                    "無": 2
+                },
+                "text": "このポケモンのHPを30回復。",
+                "convertedEnergyCost": 4
+            }
+        ],
+        "retreatCost": {
+            "無": 3
+        },
+        "convertedRetreatCost": 3,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/29",
+            "subName": "フシギバナドロップイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-019",
+        "category": "ポケモン",
+        "name": "ゲッコウガ",
+        "evolvesFrom": "ゲコガシラ",
+        "stage": "2進化",
+        "type": "水",
+        "weakness": "雷",
+        "hp": 120,
+        "attacks": [
+            {
+                "name": "かすみぎり",
+                "damage": 70,
+                "cost": {
+                    "水": 1,
+                    "無": 1
+                },
+                "convertedEnergyCost": 2
+            }
+        ],
+        "ability": [
+            {
+                "name": "みずしゅりけん",
+                "text": "自分の番に1度使える。相手のポケモン1匹に20ダメージ。"
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/29",
+            "subName": "フシギバナドロップイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-020",
+        "category": "ポケモン",
+        "name": "ゴースト",
+        "evolvesFrom": "ゴース",
+        "stage": "1進化",
+        "type": "超",
+        "weakness": "悪",
+        "hp": 70,
+        "attacks": [
+            {
+                "name": "ふいをつく",
+                "damage": 50,
+                "cost": {
+                    "超": 1
+                },
+                "text": "コインを1回投げウラなら、このワザは失敗。",
+                "convertedEnergyCost": 1
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/29",
+            "subName": "フシギバナドロップイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-021",
+        "category": "ポケモン",
+        "name": "イワーク",
+        "stage": "たね",
+        "type": "闘",
+        "weakness": "草",
+        "hp": 110,
+        "attacks": [
+            {
+                "name": "ランドクラッシュ",
+                "damage": 70,
+                "cost": {
+                    "闘": 3
+                },
+                "convertedEnergyCost": 3
+            }
+        ],
+        "retreatCost": {
+            "無": 4
+        },
+        "convertedRetreatCost": 4,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/29",
+            "subName": "フシギバナドロップイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-022",
+        "category": "ポケモン",
+        "name": "プリン",
+        "stage": "たね",
+        "type": "無",
+        "weakness": "闘",
+        "hp": 50,
+        "attacks": [
+            {
+                "name": "うたう",
+                "damage": 0,
+                "cost": {
+                    "無": 1
+                },
+                "text": "相手のバトルポケモンをねむりにする。",
+                "convertedEnergyCost": 1
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/11/29",
+            "subName": "フシギバナドロップイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-023",
+        "category": "ポケモン",
+        "name": "フシギダネ",
+        "stage": "たね",
+        "type": "草",
+        "weakness": "炎",
+        "hp": 70,
+        "attacks": [
+            {
+                "name": "つるのムチ",
+                "damage": 40,
+                "cost": {
+                    "草": 1,
+                    "無": 1
+                },
+                "convertedEnergyCost": 2
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/12/06",
+            "subName": "ゲットチャレンジイベント"
+        },
+        "rarity": 0
+    },
+    {
+        "id": "PA-024",
+        "category": "ポケモン",
+        "name": "コイル",
+        "stage": "たね",
+        "type": "雷",
+        "weakness": "闘",
+        "hp": 60,
+        "attacks": [
+            {
+                "name": "ビッカリだま",
+                "damage": 20,
+                "cost": {
+                    "雷": 1
+                },
+                "convertedEnergyCost": 1
+            }
+        ],
+        "retreatCost": {
+            "無": 1
+        },
+        "convertedRetreatCost": 1,
+        "set": {
+            "name": "イベント",
+            "releaseDate": "2024/12/06",
+            "subName": "ゲットチャレンジイベント"
+        },
+        "rarity": 0
     }
 ]
