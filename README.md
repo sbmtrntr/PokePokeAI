@@ -6,7 +6,7 @@
         - すべてのカードの画像を取得する必要あり `statics/cards/images/{number}.png`
     - もしくは、通信をキャプチャして、カードを判定する
 - カードのステータス・効果
-    - すべてのカードのステータス・効果を`statics/cards/status.yaml`に記載する
+    - すべてのカードのステータス・効果を`statics/cards/pokemon.yaml`に記載する
 - 強化学習でやるか、αβ法でやるか
 
 ## 環境構築
