@@ -1,23 +1,17 @@
 import random
-from utils.function import *
-from utils.ability import *
+from ability import *
+from movement import *
+from field import Field
+
+# コイントス
+def coin_toss():
+    return random.choice(["表", "裏"])
 
 def main():
     print("対戦よろしくお願いします")
-
+    
     my_point = 0
     opponent_point = 0
-    my_next_energy = random.choice(my_energy_type)
-    opponent_next_energy = random.choice(opponent_energy_type)
-
-    # 初期手札を取得
-    my_hand = get_initial_hand(my_stock)
-    opponent_hand = get_initial_hand(opponent_stock)
-
-    print("---自分---")
-    debug_print(my_hand, my_stock)
-    print("---相手---")
-    debug_print(opponent_hand, opponent_stock)
 
     # 先行後攻決め
     if coin_toss() == "表":
@@ -40,6 +34,9 @@ def main():
         turn += 1
         print(f"{turn}ターン目")
 
+        player_field.display_field()
+        opponent_field.display_field()
+
         if (turn % 2 == 1) == (first_turn == "自分"):
             print("自分のターンです")
             if not turn == 1:
@@ -55,7 +52,7 @@ def main():
     print("対戦ありがとうございました")
 
 if __name__ == "__main__":
-    # 山札を取得
-    my_stock, my_energy_type = get_stock("フシギバナEX")
-    opponent_stock, opponent_energy_type = get_stock("リザードンEX")
+    # プレイヤーと相手のフィールドを作成
+    player_field = Field(player_name="自分", deck_name="フシギバナEX", energy_type=["草"])
+    opponent_field = Field(player_name="相手", deck_name="リザードンEX", energy_type=["炎"])
     main()
