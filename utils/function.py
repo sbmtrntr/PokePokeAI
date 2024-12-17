@@ -23,13 +23,25 @@ def get_stock(deck_name):
             break
 
     stock = []
-    for card_id in deck["カード"]:
+    for card_id in deck["カードid"]:
         card = next((c for c in all_cards if c["id"] == card_id), None)
         if card:
-            stock.append(card)
+            stock.append({
+                "name": card.get("name"),
+                "evolvesFrom": card.get("evolvesFrom"),
+                "stage": card.get("stage"),
+                "type": card.get("type"),
+                "weakness": card.get("weakness"),
+                "hp": card.get("hp"),
+                "attacks": card.get("attacks"),
+                "retreatCost": card.get("retreatCost"),
+                "convertedRetreatCost": card.get("convertedRetreatCost"),
+                "energy": {e: 0 for e in deck["エネルギー"]}
+            })
         else:
             print(f"Warning: Card '{card_id}' not found in the dataset.")
-    return stock
+    random.shuffle(stock)
+    return stock, deck["エネルギー"]
 
 # 山札からランダムにたねポケモンを選ぶ
 def select_basic_pokemon(stock):
@@ -55,6 +67,12 @@ def get_initial_hand(stock):
         hand.append(draw_card(stock))
     return hand
 
+# コイントス
+def coin_toss():
+    return random.choice(["表", "裏"])
+
+
+# デバッグ用
 def debug_print(hand, stock):
     print("---手札---")
     for card in hand:
