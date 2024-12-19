@@ -16,14 +16,28 @@ class PokemonCard(Card):
         self.stage = stage
         self.type = type
         self.evolvesFrom = evolvesFrom
-        self.max_hp = hp
         self.hp = hp
+        self.max_hp = hp
         self.attacks = attacks
         self.weakness = weakness
         self.convertedRetreatCost = convertedRetreatCost
         self.energy = defaultdict(int)
         self.ability = ability
+        self.has_evolved_this_turn = False  
     
+    def evolve(self, evolvesTo):
+        self.name = evolvesTo.name
+        self.stage = evolvesTo.stage
+        self.type = evolvesTo.type
+        self.evolvesFrom = evolvesTo.evolvesFrom
+        self.hp = evolvesTo.hp - (self.max_hp - self.hp)
+        self.max_hp = evolvesTo.max_hp
+        self.attacks = evolvesTo.attacks
+        self.weakness = evolvesTo.weakness
+        self.convertedRetreatCost = evolvesTo.convertedRetreatCost
+        self.ability = evolvesTo.ability
+        self.has_evolved_this_turn = True
+
     def display_card(self):
         WIDTH = 16
         # 枠の上部

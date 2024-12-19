@@ -19,7 +19,11 @@ def erika(field):
 
     for i, pokemon in enumerate(leaf_type_pokemon):
         print(f"{i+1}. {pokemon.name}")
-    index = int(input("選択肢からポケモンを選択してください: ")) - 1
+    while True:
+        index = int(input("ポケモンを選択してください: ")) - 1
+        if index >= 0:
+            break
+        print("入力が空です。もう一度入力してください")
     field.bench.get_bench()[index].hp = min(field.bench.get_bench()[index].hp + 50, field.bench.get_bench()[index].max_hp)
     print(f"{field.bench.get_bench()[index].name}のHPが50回復")
     return field

@@ -1,5 +1,7 @@
 import logging
 import time
+import os
+import platform
 from ability import *
 from movement import *
 from field import Field
@@ -12,6 +14,8 @@ from utils.coin_toss import do_coin_toss
 #     format="%(asctime)s - %(levelname)s - %(message)s"
 # )
 
+def clear_console():
+    os.system('cls' if platform.system() == 'Windows' else 'clear')
 
 def main(Player1_field, Player2_field):
     print("\n対戦よろしくお願いします")
@@ -33,21 +37,27 @@ def main(Player1_field, Player2_field):
         print(f"\n---{turn}ターン目---")
 
         if (turn % 2 == 1) == (first_turn == "Player1"):
-            print("Player1のターンです")
             
-            Player1_field.reset() # 前回の効果をリセット
+            Player1_field.reset_turn(turn) # 前回の効果をリセット
 
             # エネルギーを生成
             if not turn == 1:
                 Player1_field.energy_zone.generate_energy()
 
             while True:
+                clear_console()
+                print("Player1のターンです")
                 Player1_field.display_field()
-                Player2_field.display_field()
+                # Player2_field.display_field()
                 # 選択肢を出力
                 choices = display_choice(Player1_field)
                 # 選択肢から行動を選択
-                index = int(input("上記から行動を選択してください: ")) - 1
+                while True:
+                    index = int(input("行動を選択してください: ")) - 1
+                    if index >= 0:
+                        break
+                    print("入力が空です。もう一度入力してください")
+                    
                 if choices[index] == "ターンを終了": 
                     break
 
@@ -63,8 +73,8 @@ def main(Player1_field, Player2_field):
                 elif choices[index] == "たねポケモンをベンチに出す":
                     Player1_field = hand_to_bench(Player1_field)
                 
-                # elif choices[index] == "進化する":
-                #     Player1_field = evolve(Player1_field)
+                elif choices[index] == "進化する":
+                    Player1_field = evolve(Player1_field)
 
                 # elif choices[index] == "サポートカードを使用する":
                 #     Player1_field, Player2_field = use_support(Player1_field, Player2_field)
@@ -86,18 +96,25 @@ def main(Player1_field, Player2_field):
 
         else:
             print("Player2のターンです")
-            Player2_field.reset()
+            Player2_field.reset_turn(turn)
             # エネルギーを生成
             if not turn == 1:
                 Player2_field.energy_zone.generate_energy()
 
             while True:
+                clear_console()
+                print("Player2のターンです")
+                # Player1_field.display_field()
                 Player2_field.display_field()
-                Player1_field.display_field()
                 # 選択肢を出力
                 choices = display_choice(Player2_field)
                 # 選択肢から行動を選択
-                index = int(input("上記から行動を選択してください: ")) - 1
+                while True:
+                    index = int(input("行動を選択してください: ")) - 1
+                    if index >= 0:
+                        break
+                    print("入力が空です。もう一度入力してください")
+
                 if choices[index] == "ターンを終了": 
                     break
 
@@ -112,6 +129,9 @@ def main(Player1_field, Player2_field):
 
                 elif choices[index] == "たねポケモンをベンチに出す":
                     Player2_field = hand_to_bench(Player2_field)
+
+                elif choices[index] == "進化する":
+                    Player2_field = evolve(Player2_field)
 
                 # elif choices[index] == "サポートカードを使用する":
                 #     Player1_field, Player2_field = use_support(Player1_field, Player2_field)

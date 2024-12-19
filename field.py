@@ -1,7 +1,5 @@
 import json
 import random
-import logging
-from collections import defaultdict
 from card import PokemonCard, TrainerCard
 
 
@@ -210,11 +208,15 @@ class Field:
         self.energy_zone = EnergyZone(energy_type)
         self.trash = []
         self.used_support = False
+        self.turn = 0
     
-    def reset(self):
+    def reset_turn(self, turn):
+        self.turn = turn
         self.battle_field.escape_energy = 0
         self.used_support = False
         self.hand.add_card(self.stock)
+        for pokemon in [self.battle_field.get_battle_pokemon()] + self.bench.get_bench_pokemon():
+            pokemon.has_evolved_this_turn = False
 
     def display_field(self):
         print(f"\n--- {self.player_name} のフィールド状況 ---")

@@ -43,10 +43,16 @@ def can_hand2bench(field):
     return False
 
 def can_evolve(field):
+    # 2ターン目までは進化できない
+    if field.turn <= 2:
+        return False
     pokemon_names = [field.battle_field.get_battle_pokemon().name] + [pokemon.name for pokemon in field.bench.get_bench_pokemon()]
     for card in field.hand.get_hand():
         if card.category == "ポケモン" and card.evolvesFrom in pokemon_names:
-            return True
+            # このターンに進化していないポケモンがいる場合は進化できる
+            for pokemon in [field.battle_field.get_battle_pokemon()] + field.bench.get_bench_pokemon():
+                if pokemon.name == card.evolvesFrom and not pokemon.has_evolved_this_turn:
+                    return True
     return False
 
             
