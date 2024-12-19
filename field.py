@@ -1,6 +1,38 @@
 import json
 import random
 
+class PokemonCard:
+    def __init__(self, name, stage, type, evolvesFrom, hp, attacks, weakness, convertedRetreatCost):
+        self.name = name
+        self.stage = stage
+        self.type = type
+        self.evolvesFrom = evolvesFrom
+        self.max_hp = hp
+        self.hp = hp
+        self.attacks = attacks
+        self.weakness = weakness
+        self.convertedRetreatCost = convertedRetreatCost
+        self.energy = []
+    
+    def display_card(self):
+        WIDTH = 16
+        # 枠の上部
+        print(f"+{'ー' * WIDTH}+")
+        # 名前、HP、タイプを表示
+        print(f" {self.name:<6} HP:{self.hp}/{self.max_hp}    {self.type:}タイプ ")
+
+        # 技の表示
+        for attack in self.attacks:
+            # 攻撃のエネルギーコストを連結
+            energies = ''.join(attack['cost'])
+            print(f" {energies:<4} {attack['name']:^6} ({attack['damage']}) ")
+
+        # 弱点、逃げエネ、エネルギー表示
+        print(f" 弱点:{self.weakness}  逃げエネ:{self.convertedRetreatCost} エネ:{''.join(self.energy)} ")
+
+        # 枠の下部
+        print(f"+{'ー' * WIDTH}+")
+
 # JSONファイルをロード
 def load_json_file(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
@@ -25,23 +57,22 @@ def get_stock(deck_name):
     for card_id in deck["カードid"]:
         card = next((c for c in all_cards if c["id"] == card_id), None)
         if card:
-            cards.append({
-                "name": card.get("name"),
-                "evolvesFrom": card.get("evolvesFrom"),
-                "stage": card.get("stage"),
-                "type": card.get("type"),
-                "weakness": card.get("weakness"),
-                "max_hp": card.get("hp"),
-                "hp": card.get("hp"),
-                "attacks": card.get("attacks"),
-                "retreatCost": card.get("retreatCost"),
-                "convertedRetreatCost": card.get("convertedRetreatCost")
-            })
+            cards.append(PokemonCard(
+                name=card.get("name"),
+                evolvesFrom=card.get("evolvesFrom"),
+                stage=card.get("stage"),
+                type=card.get("type"),
+                weakness=card.get("weakness"),
+                hp=card.get("hp"),
+                attacks=card.get("attacks"),
+                convertedRetreatCost=card.get("convertedRetreatCost")
+            ))
         else:
             print(f"Warning: Card '{card_id}' not found in the dataset.")
     
     random.shuffle(cards)
     return cards
+        
 
 class Stock:
     def __init__(self, deck_name):
@@ -58,7 +89,7 @@ class Stock:
     
     def draw_basic_pokemon(self):
         """山札からランダムにたねポケモンを1枚引く"""
-        basic_pokemons = [card for card in self.cards if card.get("stage") == "たね"]
+        basic_pokemons = [card for card in self.cards if card.stage == "たね"]
         if not basic_pokemons:
             print("No basic Pokémon found in the deck.")
             return None
@@ -107,7 +138,7 @@ class Hand:
     
     def select_basic_pokemon(self):
         """手札からたねポケモンを選択"""
-        basic_pokemons = [card for card in self.cards if card.get("stage") == "たね"]
+        basic_pokemons = [card for card in self.cards if card.stage == "たね"]
         if not basic_pokemons:
             print("手札にたねポケモンがありません。")
             return None
@@ -175,18 +206,20 @@ class Field:
     def display_field(self):
         print(f"\n--- {self.player_name} のフィールド状況 ---")
         print("【バトルポケモン】")
-        print(self.battle_field.get_battle_pokemon() or "なし")
+        battle_pokemon = self.battle_field.get_battle_pokemon()
+        battle_pokemon.display_card()
 
         print("\n【ベンチポケモン】")
-        for i, pokemon in enumerate(self.bench.get_bench()):
-            print(f"ベンチ{i+1}: {pokemon}")
+        for i, bench_pokemon in enumerate(self.bench.get_bench()):
+            print(f"ベンチ{i+1}")
+            bench_pokemon.display_card()
 
         print("\n【手札】")
-        for i, card in enumerate(self.hand.get_hand()):
-            print(f"手札{i+1}: {card}")
+        for i, hand_pokemon in enumerate(self.hand.get_hand()):
+            print(f"手札{i+1}: {hand_pokemon.name}")
 
         print("\n【エネルギーゾーン】")
-        print(", ".join(f"{energy}: {count}" for energy, count in self.energy_zone.get_energy().items()) or "なし")
+        print(", ".join(f"{energy}: {count}" for energy, count in self.energy_zone.get_energy().items()))
 
         print(f"\n【山札の残り枚数】 {self.stock.get_remaining_cards()}")
         print("----------------------------")
