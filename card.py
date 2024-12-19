@@ -1,5 +1,4 @@
 from collections import defaultdict
-from ability import *
 from ability.support import *
 
 class Card:
@@ -39,10 +38,10 @@ class PokemonCard(Card):
             print(f" {energies:<6} {attack['name']:^6} ({attack['damage']}) ")
 
         # 弱点、逃げエネ、エネルギー表示
-        print(f" 弱点:{self.weakness:<5}  逃げエネ:{self.convertedRetreatCost:<5} エネ:{''.join(self.energy)} ")
+        print(f" 弱点:{self.weakness:<5}  逃げエネ:{self.convertedRetreatCost:<5} エネ:{''.join([energy_type * num for energy_type, num in self.energy.items()])} ")
 
         # 枠の下部
-        print(f"+{'ー' * WIDTH}+")
+        print(f"+{'ー' * WIDTH}+\n")
     
     def use_ability(self):
         print(f"{self.ability[0]['name']}を使用")
@@ -61,7 +60,7 @@ class TrainerCard(Card):
         print(f"{self.name} ({self.subCategory})")
         print(f"{self.text}")
         # 枠の下部
-        print(f"+{'ー' * WIDTH}+")
+        print(f"+{'ー' * WIDTH}+\n")
 
 class ItemCard(TrainerCard):
     def __init__(self, name, subCategory, text):

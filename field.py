@@ -109,6 +109,10 @@ class Hand:
         if card:
             self.cards.append(card)
 
+    def remove_card(self, card):
+        """手札からカードを削除"""
+        self.cards.remove(card)
+
     def display_hand(self):
         """手札の内容を表示"""
         print("\n【手札】")
@@ -164,9 +168,9 @@ class Bench:
         self.capacity = capacity
         self.bench_pokemons = []
 
-    def add_pokemon(self, hand):
+    def add_pokemon(self, pokemon):
         if len(self.bench_pokemons) < self.capacity:
-            self.bench_pokemons.append(hand.select_basic_pokemon())
+            self.bench_pokemons.append(pokemon)
         else:
             print("ベンチが満杯です。")
 
@@ -207,9 +211,10 @@ class Field:
         self.trash = []
         self.used_support = False
     
-    def initialize_field(self):
+    def reset(self):
         self.battle_field.escape_energy = 0
         self.used_support = False
+        self.hand.add_card(self.stock)
 
     def display_field(self):
         print(f"\n--- {self.player_name} のフィールド状況 ---")
@@ -224,8 +229,7 @@ class Field:
 
         print("\n【手札】")
         for i, hand_card in enumerate(self.hand.get_hand()):
-            print(f"手札{i+1}")
-            hand_card.display_card()
+            print(f"手札{i+1} {hand_card.name}")
 
         print("\n【エネルギーゾーン】")
         print(f"現在のエネルギー: {'なし' if self.energy_zone.current_energy is None else self.energy_zone.current_energy}")

@@ -14,17 +14,23 @@ def escape(field):
     for i, pokemon in enumerate(field.bench.get_bench_pokemon()):
         print(f"{i+1}. {pokemon.name}")
     index = int(input("ポケモンの番号を入力してください: ")) - 1
-    field.bench.get_bench()[index], field.battle_field.get_battle_pokemon() = field.battle_field.get_battle_pokemon(), field.bench.get_bench()[index]
+    field.battle_field.swap_with_bench(field.bench, index)
     return field
 
-# # ベンチに出す
-# def hand_to_bench(field):
-    
-#     print("どのポケモンをベンチに出しますか？")
-#     for i, pokemon in enumerate(field.hand.get_hand()):
-#         print(f"{i+1}. {pokemon.name}")
-#     index = int(input("選択肢からポケモンを選択してください: ")) - 1
-#     return hand[index], hand[:index] + hand[index+1:]
+# たねポケモンをベンチに出す
+def hand_to_bench(field):
+    # 手札からたねポケモンを抽出(本当は進化もある)
+    pokemon_list = []
+    for card in field.hand.get_hand():
+        if card.category == "ポケモン" and card.stage == "たね":
+            pokemon_list.append(card)
+    print("どのポケモンをベンチに出しますか？")
+    for i, pokemon in enumerate(pokemon_list):
+        print(f"{i+1}. {pokemon.name}")
+    index = int(input("選択肢からポケモンを選択してください: ")) - 1
+    field.bench.add_pokemon(pokemon_list[index])
+    field.hand.remove_card(pokemon_list[index])
+    return field
 
 
 # # サポートカードを使用する

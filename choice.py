@@ -1,5 +1,3 @@
-from movement import *
-
 # クラスにする必要がなかったのでリファクタリングしたい
 
 class Choice:
@@ -7,7 +5,7 @@ class Choice:
         self.field = field
         self.battle_field = field.battle_field
         self.battle_pokemon = field.battle_field.get_battle_pokemon()
-        self.bench_pokemon = field.bench.get_bench()
+        self.bench_pokemon = field.bench.get_bench_pokemon()
         self.hand_card = field.hand.get_hand()
         self.energy_current, self.energy_next = field.energy_zone.get_energy()
         self.choice = None
@@ -37,7 +35,7 @@ class Choice:
     
     def can_escape(self):
         # ベンチが空の場合は逃げられない
-        if len(self.bench) == 0:
+        if len(self.bench_pokemon) == 0:
             return False
         # 逃げエネ <= エネルギーの合計 + 逃げエネ軽減カードの効果
         if self.battle_pokemon.convertedRetreatCost <= sum([value for value in self.battle_pokemon.energy.values()]) + self.battle_field.escape_energy:
