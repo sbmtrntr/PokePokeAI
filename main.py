@@ -1,24 +1,28 @@
-import random
+import logging
+import time
 from ability import *
 from field import Field
 from choice import Choice
+from movement import *
+from utils.coin_toss import do_coin_toss
 
-# コイントス
-def do_coin_toss():
-    coin_toss = random.choice(["表", "裏"])
-    print("コイントス: ", coin_toss)
-    return coin_toss
+# logging.basicConfig(
+#     filename=f"log/{time.strftime('%Y%m%d-%H%M%S')}.log",
+#     level=print,
+#     format="%(asctime)s - %(levelname)s - %(message)s"
+# )
+
 
 def main():
-    print("対戦よろしくお願いします")
+    print("\n対戦よろしくお願いします")
 
     # 先行後攻決め
     if do_coin_toss() == "表":
-        first_turn = "自分"
-        print("自分が先行です")
+        first_turn = "Player1"
+        print("Player1が先行です")
     else:
-        first_turn = "相手"
-        print("相手が先行です")
+        first_turn = "Player2"
+        print("Player2が先行です")
 
     turn = 0
 
@@ -28,58 +32,86 @@ def main():
         turn += 1
         print(f"\n---{turn}ターン目---")
 
-        opponent_field.display_field()
-        player_field.display_field()
-
-        if (turn % 2 == 1) == (first_turn == "自分"):
-            print("自分のターンです")
+        if (turn % 2 == 1) == (first_turn == "Player1"):
+            print("Player1のターンです")
+            Player1_field.initialize_field()
             # エネルギーを生成
             if not turn == 1:
-                player_field.energy_zone.generate_energy()
+                Player1_field.energy_zone.generate_energy()
+            
+            Player1_field.display_field()
+            Player2_field.display_field()
 
             while True:
                 # 選択肢を出力
-                choice = Choice(player_field)
-                choice.display_choice()
+                choice = Choice(Player1_field)
+                choices = choice.display_choice()
                 # 選択肢から行動を選択
                 index = int(input("選択肢から行動を選択してください: ")) - 1
-                if index == 0: break
-                elif index == 1: exit(print("自分の負けです"))
-                elif index == len(choice.choices) - 1: # 攻撃
-                    my_point += choice.select_choice(index)
-                    break 
-                else: choice.select_choice(index, player_field)
+                if choices[index] == "ターンを終了": 
+                    break
+
+                elif choices[index] == "降参": 
+                    exit(print("Player1の負けです"))
+
+                elif choices[index] == "逃げる":
+                    Player1_field = escape(Player1_field)
+
+                elif choices[index] == "たねポケモンをベンチに出す":
+                    Player1_field = hand_to_bench(Player1_field)
+
+                elif choices[index] == "サポートカードを使用する":
+                    Player1_field, Player2_field = use_support(Player1_field, Player2_field)
+
+                elif choices[index] == "グッズを使用する":
+                    Player1_field, Player2_field = use_item(Player1_field, Player2_field)
+
+                elif choices[index] == "特性を使用する":
+                    Player1_field, Player2_field = use_ability(Player1_field, Player2_field)
+
+                elif choices[index] == "エネルギーをつける":
+                    Player1_field = attach_energy(Player1_field)
+
+                elif choices[index] == "攻撃する":
+                    Player1_field, Player2_field = attack(Player1_field, Player2_field)
+                else:
+                    print("無効な選択です")
+            
+            if Player1_field.point == 3:
+                print("Player1の勝利です")
+                break
 
         else:
-            print("相手のターンです")
+            print("Player2のターンです")
+            Player2_field.initialize_field()
             if not turn == 1:
-                player_field.energy_zone.generate_energy()
+                Player2_field.energy_zone.generate_energy()
+
+            Player2_field.display_field()
+            Player1_field.display_field()
 
             while True:
                 # 選択肢を出力
-                choice = Choice(player_field)
+                choice = Choice(Player1_field)
                 choice.display_choice()
                 # 選択肢から行動を選択
                 index = int(input("選択肢から行動を選択してください: ")) - 1
-                if index == 0: break
-                elif index == 1: exit(print("自分の負けです"))
+                if index == 0: break # ターン終了
+                elif index == 1: exit(print("Player1の負けです")) # 降参
                 elif index == len(choice.choices) - 1: break # 攻撃
-                else: choice.select_choice(index)
-
-        if my_point == 3:
-            print("自分の勝利です")
-            break
-        elif opponent_point == 3:
-            print("相手の勝利です")
-            break
+                else: choice.select_choice(index) # その他
             
+            if Player2_field.point == 3:
+                print("Player2の勝利です")
+                break
         
-    print("対戦ありがとうございました")
+    print("\n対戦ありがとうございました")
 
 if __name__ == "__main__":
-    # プレイヤーと相手のフィールドを作成
-    player_field = Field(player_name="自分", deck_name="フシギバナEX", energy_type=["草"])
-    opponent_field = Field(player_name="相手", deck_name="リザードンEX", energy_type=["炎"])
-    my_point = 0
-    opponent_point = 0
-    main()
+    # プレイヤーとPlayer2のフィールドを作成
+    Player1_field = Field(player_name="Player1", deck_name="フシギバナEX", energy_type=["草"])
+    Player2_field = Field(player_name="Player2", deck_name="リザードンEX", energy_type=["炎"])
+    try:
+        main()
+    except Exception as e:
+        logging.error(f"エラーが発生しました: {e}")
