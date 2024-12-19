@@ -53,11 +53,15 @@
     - もしくは、通信をキャプチャして、カードを判定する
 
 ## Usage
+1. statics/template_decks.jsonに使いたいデッキを登録
+2. main.pyの`Player1_field`と`Player2_field`を変更
+3. コマンドラインで以下を実行
 ```bash
 python main.py
 ```
 
 ## Environment
+対戦するだけなら（今のところ）必要なし
 ```bash
 conda create -n pokepoke python=3.9
 conda activate pokepoke
