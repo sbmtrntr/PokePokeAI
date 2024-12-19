@@ -35,7 +35,7 @@
     - [ ] 攻撃する
   
 - [ ] ポケモン、グッズ、サポートの効果を反映させる
-    - かなり面倒くさい作業なので、できたら人の手を借りたい
+    - 途方もない作業なので、できたら人の手を借りたい
         - とりあえずフシギバナEXとリザードンEXで使われるカードの効果だけ完成させる
     - `ability/{}.py`に記載 
 
@@ -53,8 +53,8 @@
     - もしくは、通信をキャプチャして、カードを判定する
 
 ## Usage
-1. statics/template_decks.jsonに使いたいデッキを登録
-2. main.pyの`Player1_field`と`Player2_field`を変更
+1. `statics/template_decks.json`に使いたいデッキを登録
+2. `main.py`の`Player1_field`と`Player2_field`を変更
 3. コマンドラインで以下を実行
 ```bash
 python main.py

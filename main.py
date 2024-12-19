@@ -3,7 +3,7 @@ import time
 from ability import *
 from movement import *
 from field import Field
-from choice import Choice
+from choice import display_choice
 from utils.coin_toss import do_coin_toss
 
 # logging.basicConfig(
@@ -45,8 +45,7 @@ def main(Player1_field, Player2_field):
                 Player1_field.display_field()
                 Player2_field.display_field()
                 # 選択肢を出力
-                choice = Choice(Player1_field)
-                choices = choice.display_choice()
+                choices = display_choice(Player1_field)
                 # 選択肢から行動を選択
                 index = int(input("上記から行動を選択してください: ")) - 1
                 if choices[index] == "ターンを終了": 
@@ -63,6 +62,9 @@ def main(Player1_field, Player2_field):
 
                 elif choices[index] == "たねポケモンをベンチに出す":
                     Player1_field = hand_to_bench(Player1_field)
+                
+                # elif choices[index] == "進化する":
+                #     Player1_field = evolve(Player1_field)
 
                 # elif choices[index] == "サポートカードを使用する":
                 #     Player1_field, Player2_field = use_support(Player1_field, Player2_field)
@@ -93,8 +95,7 @@ def main(Player1_field, Player2_field):
                 Player2_field.display_field()
                 Player1_field.display_field()
                 # 選択肢を出力
-                choice = Choice(Player2_field)
-                choices = choice.display_choice()
+                choices = display_choice(Player2_field)
                 # 選択肢から行動を選択
                 index = int(input("上記から行動を選択してください: ")) - 1
                 if choices[index] == "ターンを終了": 
