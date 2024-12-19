@@ -154,6 +154,22 @@ class BattleField:
     def swap_with_bench(self, bench, index):
         """バトル場とベンチのポケモンを入れ替える"""
         if 0 <= index < len(bench.bench_pokemons):
+            # バトル場のポケモンのエネルギーが1種類なら逃げエネ分エネルギーを消費
+            if len(self.battle_pokemon.energy) == 1:
+                energy_type = list(self.battle_pokemon.energy.keys())[0]
+                self.battle_pokemon.energy[energy_type] -= self.battle_pokemon.convertedRetreatCost
+            #複数のエネルギーがついている場合は消費するエネルギーを選択
+            else:
+                for _ in range(self.escape_energy):
+                    for energy_type, num in self.battle_pokemon.energy.items():
+                        print(f"{energy_type}: {num}個")
+                    while True:
+                        selected_energy_type = input("エネルギーを選択してください: ")
+                        if selected_energy_type:
+                            break
+                        print("入力が空です。もう一度入力してください")
+                    self.battle_pokemon.energy[selected_energy_type] -= 1
+            
             bench_pokemon = bench.bench_pokemons[index]
             bench.bench_pokemons[index] = self.battle_pokemon
             self.battle_pokemon = bench_pokemon

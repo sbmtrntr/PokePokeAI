@@ -75,6 +75,9 @@ def main(Player1_field, Player2_field):
                 
                 elif choices[index] == "進化する":
                     Player1_field = evolve(Player1_field)
+                
+                # elif choices[index] == "攻撃する":
+                #     Player1_field, Player2_field = attack(Player1_field, Player2_field)
 
                 # elif choices[index] == "サポートカードを使用する":
                 #     Player1_field, Player2_field = use_support(Player1_field, Player2_field)
@@ -85,8 +88,6 @@ def main(Player1_field, Player2_field):
                 # elif choices[index] == "特性を使用する":
                 #     Player1_field, Player2_field = use_ability(Player1_field, Player2_field)
 
-                # elif choices[index] == "攻撃する":
-                #     Player1_field, Player2_field = attack(Player1_field, Player2_field)
                 else:
                     print("無効な選択です")
             

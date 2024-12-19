@@ -71,6 +71,16 @@ def evolve(field):
     field.hand.remove_card(card)
     return field
 
+
+# # 攻撃する
+# def attack(field1, field2):
+#     print("どの技を打ちますか？")
+#     for i, attack in enumerate(field1.battle_field.get_battle_pokemon().attacks):
+#         print(f"{i+1}. {attack['name']}")
+#     index = int(input("技を選択してください: ")) - 1
+#     field1.battle_field.get_battle_pokemon().attack(field2.battle_field.get_battle_pokemon(), field1.battle_field.get_battle_pokemon().attacks[index])
+#     return field1, field2
+
 # # サポートカードを使用する
 # def use_support(field1, field2):
 #     print("どのサポートカードを使用しますか？")
@@ -96,6 +106,3 @@ def evolve(field):
 #     index = int(input("選択肢から特性を選択してください: ")) - 1
 #     field.hand.get_hand()[index].use()
 
-# # 攻撃する
-# def attack(field1, field2):
-#     return fie
