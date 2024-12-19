@@ -218,9 +218,9 @@ class Field:
         for pokemon in [self.battle_field.get_battle_pokemon()] + self.bench.get_bench_pokemon():
             pokemon.has_evolved_this_turn = False
 
-    def display_field(self):
+    def display_as_my_field(self):
         print(f"\n--- {self.player_name} のフィールド状況 ---")
-        print("【バトルポケモン】")
+        print("\n【バトルポケモン】")
         battle_pokemon = self.battle_field.get_battle_pokemon()
         battle_pokemon.display_card()
 
@@ -237,3 +237,17 @@ class Field:
         print(f"現在のエネルギー: {'なし' if self.energy_zone.current_energy is None else self.energy_zone.current_energy}")
         print(f"次のエネルギー: {self.energy_zone.next_energy}")
         print("----------------------------")
+    
+    def display_as_opponent_field(self):
+        print("\n【ベンチポケモン】")
+        for i, bench_pokemon in enumerate(self.bench.get_bench_pokemon()):
+            print(f"ベンチ{i+1}")
+            bench_pokemon.display_card()
+        
+        print("\n【バトルポケモン】")
+        battle_pokemon = self.battle_field.get_battle_pokemon()
+        battle_pokemon.display_card()
+        print(f"\n--- {self.player_name} のフィールド状況 ---")
+        
+
+        

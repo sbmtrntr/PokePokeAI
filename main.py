@@ -47,8 +47,8 @@ def main(Player1_field, Player2_field):
             while True:
                 clear_console()
                 print("Player1のターンです")
-                Player1_field.display_field()
-                # Player2_field.display_field()
+                Player2_field.display_as_opponent_field()
+                Player1_field.display_as_my_field()
                 # 選択肢を出力
                 choices = display_choice(Player1_field)
                 # 選択肢から行動を選択
@@ -57,7 +57,7 @@ def main(Player1_field, Player2_field):
                     if index >= 0:
                         break
                     print("入力が空です。もう一度入力してください")
-                    
+
                 if choices[index] == "ターンを終了": 
                     break
 
@@ -104,8 +104,8 @@ def main(Player1_field, Player2_field):
             while True:
                 clear_console()
                 print("Player2のターンです")
-                # Player1_field.display_field()
-                Player2_field.display_field()
+                Player1_field.display_as_opponent_field()
+                Player2_field.display_as_my_field()
                 # 選択肢を出力
                 choices = display_choice(Player2_field)
                 # 選択肢から行動を選択
