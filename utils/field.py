@@ -101,32 +101,34 @@ class BattleField:
         self.escape_energy["ス"] += 1
 
     def escape_to_bench(self, bench, index):
-        """バトル場とベンチのポケモンを入れ替える"""
-        if 0 <= index < len(bench.bench_pokemons):
-            # バトル場のポケモンのエネルギーが1種類なら逃げエネ分エネルギーを消費
-            if len(self.battle_pokemon.energy) == 1:
-                energy_type = list(self.battle_pokemon.energy.keys())[0]
-                self.battle_pokemon.energy[energy_type] -= self.battle_pokemon.convertedRetreatCost
-            #複数のエネルギーがついている場合は消費するエネルギーを選択
-            else:
-                for _ in range(self.escape_energy):
-                    for energy_type, num in self.battle_pokemon.energy.items():
-                        print(f"{energy_type}: {num}個")
-                        while True:
-                            selected_energy_type = input("エネルギーを選択してください: ")
-                            if selected_energy_type.isdigit():  # 文字列じゃない場合はcontinue
-                                print("無効な入力です")
-                                continue
-                            if selected_energy_type:
-                                break
-                            print("入力が空です。もう一度入力してください")
-                    self.battle_pokemon.energy[selected_energy_type] -= 1
-            
-            bench_pokemon = bench.bench_pokemons[index]
-            bench.bench_pokemons[index] = self.battle_pokemon
-            self.battle_pokemon = bench_pokemon
+        """バトル場のポケモンが逃げる"""
+        required_energy = self.battle_pokemon.convertedRetreatCost.copy()
+        # スピーダーが使われている場合は逃げエネを減らす
+        if self.escape_energy["ス"] > 0:
+            required_energy = min(0, required_energy - self.escape_energy["ス"])
+
+        # バトル場のポケモンのエネルギーが1種類なら逃げエネ分エネルギーを消費
+        if len(self.battle_pokemon.energy) == 1:
+            energy_type = list(self.battle_pokemon.energy.keys())[0]
+            self.battle_pokemon.energy[energy_type] -= required_energy
+        #複数のエネルギーがついている場合は消費するエネルギーを選択
         else:
-            print("無効なベンチポケモンのインデックスです。")
+            for _ in range(self.escape_energy):
+                for energy_type, num in self.battle_pokemon.energy.items():
+                    print(f"{energy_type}: {num}個")
+                    while True:
+                        selected_energy_type = input("エネルギーを選択してください: ")
+                        if selected_energy_type.isdigit():  # 文字列じゃない場合はcontinue
+                            print("無効な入力です。もう一度入力してください")
+                            continue
+                        if selected_energy_type in self.battle_pokemon.energy:
+                            break
+                        print("無効な入力です。もう一度入力してください")
+                self.battle_pokemon.energy[selected_energy_type] -= 1
+        
+        bench_pokemon = bench.bench_pokemons[index]
+        bench.bench_pokemons[index] = self.battle_pokemon
+        self.battle_pokemon = bench_pokemon
 
 
 class Bench:
@@ -179,20 +181,22 @@ class Field:
         self.used_support = False
         self.attacked = False
         self.turn_end = False
+        self.escaped = False
     
     def reset_turn(self):
-        self.battle_field.escape_energy = 0
+        self.battle_field.escape_energy = {"ス":0}
         self.used_support = False
         self.hand.add_card(self.stock.draw_card())
         self.attacked = False
         self.turn_end = False
+        self.escaped = False
         for pokemon in [self.battle_field.get_battle_pokemon()] + self.bench.get_bench_pokemon():
             pokemon.has_evolved_this_turn = False
             pokemon.has_been_hand_to_bench = False
 
     def display_as_my_field(self):
         print(f"\n--- {self.player_name} のフィールド状況 --- {self.point}pt")
-        print("\n【バトルポケモン】")
+        print(f"\n【バトルポケモン】スピーダー{self.battle_field.escape_energy['ス']}個使用")
         battle_pokemon = self.battle_field.get_battle_pokemon()
         battle_pokemon.display_card()
 

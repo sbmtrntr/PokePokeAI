@@ -216,7 +216,7 @@ def use_item(field1, field2):
     print("どのグッズを使用しますか？")
     item_cards = []
     for card in field1.hand.get_hand():
-        if isinstance(card, ItemCard):
+        if isinstance(card, ItemCard) and card.check_available(field1, field2):
             item_cards.append(card)
     for i, card in enumerate(item_cards):
         print(f"{i+1}. {card.name}")

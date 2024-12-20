@@ -26,7 +26,7 @@ class Speeder(ItemCard):
         return True
 
     def __call__(self, field1, field2):
-        field1.battle_field.escape_energy += 1
+        field1.battle_field.escape_energy["ス"] += 1
         return
 
 # きずぐすり
@@ -35,9 +35,31 @@ class Potion(ItemCard):
         super().__init__(name=name, text=text)
     
     def check_available(self, field1, field2):
-        # バトルポケモンのHPが満タンの時は使えない
-        return field1.battle_field.get_battle_pokemon().hp < field1.battle_field.get_battle_pokemon().max_hp
+        # ポケモンのHPが満タンの時は使えない
+        pokemon_list = [field1.battle_field.get_battle_pokemon()] + field1.bench.get_bench_pokemon()
+        for pokemon in pokemon_list:
+            if pokemon.hp < pokemon.max_hp:
+                return True
+        return False
 
     def __call__(self, field1, field2):
-        field1.battle_field.get_battle_pokemon().hp += 20
+        pokemon_list = [field1.battle_field.get_battle_pokemon()] + field1.bench.get_bench_pokemon()
+        eligible_pokemon = []
+        for pokemon in pokemon_list:
+            if pokemon.hp < pokemon.max_hp:
+                eligible_pokemon.append(pokemon)
+        for i, pokemon in enumerate(eligible_pokemon):
+            print(f"{i+1}. {pokemon.name} HP:{pokemon.hp}/{pokemon.max_hp}")
+        print("どのポケモンに使用しますか")
+        while True:
+            user_input = input()
+            if not user_input.isdigit():
+                print("無効な入力です。もう一度入力してください")
+                continue
+            user_input = int(user_input) - 1
+            if user_input < len(eligible_pokemon):
+                break
+            print("無効な入力です。もう一度入力してください")
+        selected_pokemon = eligible_pokemon[user_input]
+        selected_pokemon.hp += 20
         return

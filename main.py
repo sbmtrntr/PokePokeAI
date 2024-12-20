@@ -25,7 +25,8 @@ def check_game_over(Player1_field, Player2_field):
 
 def choice_action(my_field, opponent_field, turn):
     clear_console()
-    print(f"{my_field.player_name}のターンです")
+    print(f"\n---{turn}ターン目---")
+    print(f"\n{my_field.player_name}のターンです")
     opponent_field.display_as_opponent_field()
     my_field.display_as_my_field()
     choices = display_choice(my_field, opponent_field, turn)

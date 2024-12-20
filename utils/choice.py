@@ -11,7 +11,7 @@ def display_choice(field1, field2, turn):
         choices.append("進化する")
     if can_use_support(field1, field2):
         choices.append("サポートカードを使用する")
-    if can_use_item(field1):
+    if can_use_item(field1, field2):
         choices.append("グッズを使用する")
     if can_use_ability(field1):
         choices.append("特性を使用する")
@@ -26,11 +26,16 @@ def display_choice(field1, field2, turn):
     return choices
 
 def can_escape(field):
+    # このターンに逃げた場合は逃げられない
+    if field.escaped:
+        return False
     # ベンチが空の場合は逃げられない
     if len(field.bench.get_bench_pokemon()) == 0:
         return False
     # 逃げエネ <= エネルギーの合計 + 逃げエネ軽減カードの効果
-    if field.battle_field.get_battle_pokemon().convertedRetreatCost <= sum([value for value in field.battle_field.get_battle_pokemon().energy.values()]) + field.battle_field.escape_energy:
+    total_energy = sum([value for value in field.battle_field.get_battle_pokemon().energy.values()])
+    escape_reduction = field.battle_field.escape_energy["ス"]
+    if field.battle_field.get_battle_pokemon().convertedRetreatCost <= total_energy + escape_reduction:
         return True
     else:
         return False
@@ -68,9 +73,9 @@ def can_use_support(field1, field2):
     return False
 
 
-def can_use_item(field):
-    for card in field.hand.get_hand():
-        if isinstance(card, ItemCard):
+def can_use_item(field1, field2):
+    for card in field1.hand.get_hand():
+        if isinstance(card, ItemCard) and card.check_available(field1, field2):
             return True
     return False
 
