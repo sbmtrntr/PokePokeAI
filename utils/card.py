@@ -11,11 +11,12 @@ class Card:
 
 
 class PokemonCard(Card):
-    def __init__(self, name, stage, type, evolvesFrom, hp, attacks, weakness, convertedRetreatCost, ability):
+    def __init__(self, name, cardRule, evolvesFrom, stage, type, hp, attacks, weakness, convertedRetreatCost, ability):
         super().__init__("ポケモン", name)
+        self.cardRule = cardRule
+        self.evolvesFrom = evolvesFrom
         self.stage = stage
         self.type = type
-        self.evolvesFrom = evolvesFrom
         self.hp = hp
         self.max_hp = hp
         self.attacks = attacks
@@ -23,9 +24,11 @@ class PokemonCard(Card):
         self.convertedRetreatCost = convertedRetreatCost
         self.energy = defaultdict(int)
         self.ability = ability
-        self.has_evolved_this_turn = False  
-    
+        self.has_evolved_this_turn = False
+        self.has_been_hand_to_bench= False
+
     def evolve(self, evolvesTo):
+        self.cardRule = evolvesTo.cardRule
         self.name = evolvesTo.name
         self.stage = evolvesTo.stage
         self.type = evolvesTo.type
@@ -37,18 +40,19 @@ class PokemonCard(Card):
         self.convertedRetreatCost = evolvesTo.convertedRetreatCost
         self.ability = evolvesTo.ability
         self.has_evolved_this_turn = True
+        self.has_been_hand_to_bench = False
 
     def display_card(self):
         WIDTH = 16
         # 枠の上部
         print(f"+{'ー' * WIDTH}+")
         # 名前、HP、タイプを表示
-        print(f" {self.name:<6} HP:{self.hp}/{self.max_hp}    {self.type:}タイプ ")
+        print(f" {self.name:<6} HP:{self.hp}/{self.max_hp} {self.type:}タイプ ")
 
         # 技の表示
         for attack in self.attacks:
             # 攻撃のエネルギーコストを連結
-            energies = ''.join(attack['cost'])
+            energies = ''.join([energy_type * num for energy_type, num in attack["cost"].items()])
             print(f" {energies:<6} {attack['name']:^6} ({attack['damage']}) ")
 
         # 弱点、逃げエネ、エネルギー表示

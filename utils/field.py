@@ -1,6 +1,6 @@
 import json
 import random
-from card import PokemonCard, TrainerCard
+from utils.card import PokemonCard, TrainerCard
 
 
 # JSONファイルをロード
@@ -30,6 +30,7 @@ def get_stock(deck_name):
             if card.get("category") == "ポケモン":
                 cards.append(PokemonCard(
                     name=card.get("name"),
+                    cardRule=card.get("cardRule"),
                     evolvesFrom=card.get("evolvesFrom"),
                     stage=card.get("stage"),
                     type=card.get("type"),
@@ -140,9 +141,9 @@ class BattleField:
         self.battle_pokemon = hand.select_basic_pokemon()  # バトル場
         self.escape_energy = 0
 
-    def set_battle_pokemon(self, hand):
+    def set_battle_pokemon(self, pokemon):
         """バトル場にポケモンをセット"""
-        self.battle_pokemon = hand.select_basic_pokemon()
+        self.battle_pokemon = pokemon
 
     def get_battle_pokemon(self):
         return self.battle_pokemon
@@ -151,7 +152,7 @@ class BattleField:
         """逃げエネを追加"""
         self.escape_energy += 1
 
-    def swap_with_bench(self, bench, index):
+    def escape_to_bench(self, bench, index):
         """バトル場とベンチのポケモンを入れ替える"""
         if 0 <= index < len(bench.bench_pokemons):
             # バトル場のポケモンのエネルギーが1種類なら逃げエネ分エネルギーを消費
@@ -163,11 +164,14 @@ class BattleField:
                 for _ in range(self.escape_energy):
                     for energy_type, num in self.battle_pokemon.energy.items():
                         print(f"{energy_type}: {num}個")
-                    while True:
-                        selected_energy_type = input("エネルギーを選択してください: ")
-                        if selected_energy_type:
-                            break
-                        print("入力が空です。もう一度入力してください")
+                        while True:
+                            selected_energy_type = input("エネルギーを選択してください: ")
+                            if selected_energy_type.isdigit():  # 文字列じゃない場合はcontinue
+                                print("無効な入力です")
+                                continue
+                            if selected_energy_type:
+                                break
+                            print("入力が空です。もう一度入力してください")
                     self.battle_pokemon.energy[selected_energy_type] -= 1
             
             bench_pokemon = bench.bench_pokemons[index]
@@ -185,11 +189,15 @@ class Bench:
     def add_pokemon(self, pokemon):
         if len(self.bench_pokemons) < self.capacity:
             self.bench_pokemons.append(pokemon)
+            pokemon.has_been_hand_to_bench = True
         else:
             print("ベンチが満杯です。")
 
     def get_bench_pokemon(self):
         return self.bench_pokemons
+    
+    def remove_pokemon(self, pokemon):
+        self.bench_pokemons.remove(pokemon)
     
     def set_bench(self, bench_pokemons):
         self.bench_pokemons = bench_pokemons
@@ -224,18 +232,21 @@ class Field:
         self.energy_zone = EnergyZone(energy_type)
         self.trash = []
         self.used_support = False
-        self.turn = 0
+        self.attacked = False
+        self.turn_end = False
     
-    def reset_turn(self, turn):
-        self.turn = turn
+    def reset_turn(self):
         self.battle_field.escape_energy = 0
         self.used_support = False
         self.hand.add_card(self.stock)
+        self.attacked = False
+        self.turn_end = False
         for pokemon in [self.battle_field.get_battle_pokemon()] + self.bench.get_bench_pokemon():
             pokemon.has_evolved_this_turn = False
+            pokemon.has_been_hand_to_bench = False
 
     def display_as_my_field(self):
-        print(f"\n--- {self.player_name} のフィールド状況 ---")
+        print(f"\n--- {self.player_name} のフィールド状況 --- {self.point}pt")
         print("\n【バトルポケモン】")
         battle_pokemon = self.battle_field.get_battle_pokemon()
         battle_pokemon.display_card()
@@ -263,7 +274,7 @@ class Field:
         print("\n【バトルポケモン】")
         battle_pokemon = self.battle_field.get_battle_pokemon()
         battle_pokemon.display_card()
-        print(f"\n--- {self.player_name} のフィールド状況 ---")
+        print(f"\n--- {self.player_name} のフィールド状況 --- {self.point}pt")
         
 
         

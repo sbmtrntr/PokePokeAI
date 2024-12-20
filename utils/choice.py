@@ -1,11 +1,11 @@
-def display_choice(field):
+def display_choice(field, turn):
     choices = ["ターンを終了", "降参"]
 
     if can_escape(field):
         choices.append("逃げる")
     if can_hand2bench(field):
         choices.append("たねポケモンをベンチに出す")
-    if can_evolve(field):
+    if can_evolve(field, turn):
         choices.append("進化する")
     if can_use_support(field):
         choices.append("サポートカードを使用する")
@@ -42,16 +42,16 @@ def can_hand2bench(field):
             return True    
     return False
 
-def can_evolve(field):
+def can_evolve(field, turn):
     # 2ターン目までは進化できない
-    if field.turn <= 2:
+    if turn <= 2:
         return False
     pokemon_names = [field.battle_field.get_battle_pokemon().name] + [pokemon.name for pokemon in field.bench.get_bench_pokemon()]
     for card in field.hand.get_hand():
         if card.category == "ポケモン" and card.evolvesFrom in pokemon_names:
-            # このターンに進化していないポケモンがいる場合は進化できる
+            # このターンに手札から出していないかつ進化していないポケモンがいる場合は進化できる
             for pokemon in [field.battle_field.get_battle_pokemon()] + field.bench.get_bench_pokemon():
-                if pokemon.name == card.evolvesFrom and not pokemon.has_evolved_this_turn:
+                if pokemon.name == card.evolvesFrom and not pokemon.has_been_hand_to_bench and not pokemon.has_evolved_this_turn:
                     return True
     return False
 
