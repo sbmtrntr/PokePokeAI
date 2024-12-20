@@ -102,18 +102,18 @@ class BattleField:
 
     def escape_to_bench(self, bench, index):
         """バトル場のポケモンが逃げる"""
-        required_energy = self.battle_pokemon.convertedRetreatCost.copy()
+        required_energy = self.battle_pokemon.convertedRetreatCost
         # スピーダーが使われている場合は逃げエネを減らす
         if self.escape_energy["ス"] > 0:
             required_energy = min(0, required_energy - self.escape_energy["ス"])
 
         # バトル場のポケモンのエネルギーが1種類なら逃げエネ分エネルギーを消費
-        if len(self.battle_pokemon.energy) == 1:
+        if required_energy > 0 and len(self.battle_pokemon.energy) == 1:
             energy_type = list(self.battle_pokemon.energy.keys())[0]
             self.battle_pokemon.energy[energy_type] -= required_energy
         #複数のエネルギーがついている場合は消費するエネルギーを選択
         else:
-            for _ in range(self.escape_energy):
+            for _ in range(required_energy):
                 for energy_type, num in self.battle_pokemon.energy.items():
                     print(f"{energy_type}: {num}個")
                     while True:

@@ -24,11 +24,6 @@ def check_game_over(Player1_field, Player2_field):
     return False
 
 def choice_action(my_field, opponent_field, turn):
-    clear_console()
-    print(f"\n---{turn}ターン目---")
-    print(f"\n{my_field.player_name}のターンです")
-    opponent_field.display_as_opponent_field()
-    my_field.display_as_my_field()
     choices = display_choice(my_field, opponent_field, turn)
     while True:
         user_input = input("行動を選択してください: ")
@@ -97,6 +92,11 @@ def main(Player1_field, Player2_field):
             if not turn == 1:
                 Player1_field.energy_zone.generate_energy()
             while True:
+                clear_console()
+                print(f"\n---{turn}ターン目---")
+                print(f"\n{Player1_field.player_name}のターンです")
+                Player2_field.display_as_opponent_field()
+                Player1_field.display_as_my_field()
                 choice_action(Player1_field, Player2_field, turn)
                 if Player1_field.attacked or Player1_field.turn_end:
                     break
@@ -107,6 +107,11 @@ def main(Player1_field, Player2_field):
             if not turn == 1:
                 Player2_field.energy_zone.generate_energy()
             while True:
+                clear_console()
+                print(f"\n---{turn}ターン目---")
+                print(f"\n{Player2_field.player_name}のターンです")
+                Player1_field.display_as_opponent_field()
+                Player2_field.display_as_my_field()
                 choice_action(Player2_field, Player1_field, turn)
                 if Player2_field.attacked or Player2_field.turn_end:
                     break

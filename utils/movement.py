@@ -3,10 +3,17 @@ from utils.card import *
 
 # エネルギーをつける
 def attach_energy(field):
+    # バトル場
+    eligible_pokemon = {}
+    battle_pokemon = field.battle_field.get_battle_pokemon()
+    eligible_pokemon["バトル場"] = battle_pokemon
+
+    # ベンチポケモン
+    for i, bench_pokemon in enumerate(field.bench.get_bench_pokemon()):
+        eligible_pokemon[f"ベンチ{i+1}"] = bench_pokemon
     print("どのポケモンにエネルギーをつけますか？")
-    pokemon_list = [field.battle_field.get_battle_pokemon()] + field.bench.get_bench_pokemon()
-    for i, pokemon in enumerate(pokemon_list):
-        print(f"{i+1}. {pokemon.name}")
+    for i, (key, pokemon) in enumerate(eligible_pokemon.items(), 1):
+        print(f"{i}: {key} {pokemon.name}")
     while True:
         user_input = input("ポケモンを選択してください(戻る: q): ")
         if not user_input.isdigit():  # 数字以外の入力をチェック
@@ -15,10 +22,11 @@ def attach_energy(field):
             print("数字を入力してください")
             continue
         index = int(user_input) - 1
-        if 0 <= index < len(pokemon_list):
+        if 0 <= index < len(eligible_pokemon):
             break
         print("無効な入力です。もう一度入力してください")
-    field.energy_zone.attach_energy(pokemon_list[index])
+    selected_pokemon = list(eligible_pokemon.values())[index]
+    field.energy_zone.attach_energy(selected_pokemon)
     return 
 
 # 逃げる
