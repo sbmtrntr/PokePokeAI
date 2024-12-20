@@ -211,20 +211,27 @@ def use_support(field1, field2):
     field1.used_support = True
     return
 
-# # グッズを使用する
-# def use_item(field1, field2):
-#     print("どのグッズを使用しますか？")
-#     for i, card in enumerate(field.hand.get_hand()):
-#         print(f"{i+1}. {card.name}")
-#     index = int(input("選択肢からグッズを選択してください: ")) - 1
-#     field.hand.get_hand()[index].use()
-
-
-# # 特性を使用する
-# def use_ability(field1, field2):
-#     print("どの特性を使用しますか？")
-#     for i, card in enumerate(field.hand.get_hand()):
-#         print(f"{i+1}. {card.name}")
-#     index = int(input("選択肢から特性を選択してください: ")) - 1
-#     field.hand.get_hand()[index].use()
-
+# グッズを使用する
+def use_item(field1, field2):
+    print("どのグッズを使用しますか？")
+    item_cards = []
+    for card in field1.hand.get_hand():
+        if isinstance(card, ItemCard):
+            item_cards.append(card)
+    for i, card in enumerate(item_cards):
+        print(f"{i+1}. {card.name}")
+    while True:
+        user_input = input("グッズを選択してください(戻る: q): ")
+        if not user_input.isdigit():  # 数字以外の入力をチェック
+            if user_input == "q":
+                return 
+            print("数字を入力してください")
+            continue
+        index = int(user_input) - 1
+        if 0 <= index < len(item_cards):
+            break
+        print("無効な入力です。もう一度入力してください")
+    item_cards[index](field1, field2)
+    field1.hand.remove_card(item_cards[index])
+    field1.trash.append(item_cards[index])
+    return

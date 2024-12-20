@@ -63,11 +63,8 @@ def choice_action(my_field, opponent_field, turn):
     elif choices[index] == "サポートカードを使用する":
         use_support(my_field, opponent_field)
 
-    # elif choices[index] == "グッズを使用する":
-    #     Player1_field, Player2_field = use_item(Player1_field, Player2_field)
-
-    # elif choices[index] == "特性を使用する":
-    #     Player1_field, Player2_field = use_ability(Player1_field, Player2_field)
+    elif choices[index] == "グッズを使用する":
+        use_item(my_field, opponent_field)
 
     elif choices[index] == "攻撃する":
         attack(my_field, opponent_field)

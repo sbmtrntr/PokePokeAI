@@ -22,10 +22,11 @@ class Stock:
         """山札からランダムにたねポケモンを1枚引く"""
         basic_pokemons = [card for card in self.cards if isinstance(card, PokemonCard) and card.stage == "たね"]
         if not basic_pokemons:
-            print("No basic Pokémon found in the deck.")
+            print("デッキにたねポケモンがありません。")
             return None
         selected_pokemon = random.choice(basic_pokemons)
         self.cards.remove(selected_pokemon)
+        random.shuffle(self.cards)
         return selected_pokemon
     
     def get_initial_hand(self):
@@ -51,12 +52,9 @@ class Hand:
     def __init__(self, stock):
         self.cards = stock.get_initial_hand()
     
-    def add_card(self, stock, num=1):
-        """山札からカードを手札に追加"""
-        for _ in range(num):
-            card = stock.draw_card()
-            if card:
-                self.cards.append(card)
+    def add_card(self, pokemon):
+        """カードを手札に追加"""
+        self.cards.append(pokemon)
 
     def remove_card(self, card):
         """手札からカードを削除"""
@@ -89,7 +87,7 @@ class Hand:
 class BattleField:
     def __init__(self, hand):
         self.battle_pokemon = hand.select_basic_pokemon()  # バトル場
-        self.escape_energy = 0
+        self.escape_energy = {"ス":0}
 
     def set_battle_pokemon(self, pokemon):
         """バトル場にポケモンをセット"""
@@ -100,7 +98,7 @@ class BattleField:
     
     def add_escape_energy(self):
         """逃げエネを追加"""
-        self.escape_energy += 1
+        self.escape_energy["ス"] += 1
 
     def escape_to_bench(self, bench, index):
         """バトル場とベンチのポケモンを入れ替える"""
@@ -185,7 +183,7 @@ class Field:
     def reset_turn(self):
         self.battle_field.escape_energy = 0
         self.used_support = False
-        self.hand.add_card(self.stock)
+        self.hand.add_card(self.stock.draw_card())
         self.attacked = False
         self.turn_end = False
         for pokemon in [self.battle_field.get_battle_pokemon()] + self.bench.get_bench_pokemon():

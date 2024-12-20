@@ -21,9 +21,11 @@ class ProfessorResearch(SupportCard):
         """
         # 山札からカードを2枚ドロー（山札の残りが2枚未満の場合はその分だけドロー）
         draw_count = min(2, field1.stock.get_remaining_cards())
+        for _ in range(draw_count):
+            pokemon = field1.stock.draw_card()
+            if pokemon is not None:
+                field1.hand.add_card(pokemon)
 
-        # 手札に追加
-        field1.hand.add_card(field1.stock, draw_count)
         print(f"博士の研究を使用しました。山札から{draw_count}枚のカードを引きました。")
 
 

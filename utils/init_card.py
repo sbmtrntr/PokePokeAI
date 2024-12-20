@@ -2,7 +2,7 @@ import json
 import random
 from utils.card import PokemonCard, SupportCard, ItemCard
 from ability.support import *
-
+from ability.item import *
 # JSONファイルをロード
 def load_json_file(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
@@ -65,10 +65,27 @@ def initialize_cards(deck_name):
                             text=card.get("text")
                         ))
                 else:
-                    cards.append(ItemCard(
-                        name=card.get("name"),
-                        text=card.get("text")
-                    ))
+                    if card.get("name") == "モンスターボール":
+                        cards.append(Monsterball(
+                            name=card.get("name"),
+                            text=card.get("text")
+                        ))
+                    elif card.get("name") == "スピーダー":
+                        cards.append(Speeder(
+                            name=card.get("name"),
+                            text=card.get("text")
+                        ))
+                    elif card.get("name") == "きずぐすり":
+                        cards.append(Potion(
+                            name=card.get("name"),
+                            text=card.get("text")
+                        ))
+                    else:
+                        # 汎用的なグッズカードクラスを使う(おそらく使う機会なし)
+                        cards.append(ItemCard(
+                            name=card.get("name"),
+                            text=card.get("text")
+                        ))
         else:
             print(f"Warning: Card '{card_id}' not found in the dataset.")
     

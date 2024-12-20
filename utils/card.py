@@ -116,17 +116,17 @@ class SupportCard(TrainerCard):
 class ItemCard(TrainerCard):
     def __init__(self, name, text):
         super().__init__(name=name, subCategory="グッズ", text=text)
-
-    def __call__(self, field1, field2):
+    
+    def check_available(self, field1, field2):
         """
-        カード効果を実行するメソッド。
+        使用可能かどうかを判定するメソッド。
         各カードでオーバーライドする。
         """
         raise NotImplementedError("このメソッドはサブクラスで実装")
 
-    def check_available(self, field1, field2):
+    def __call__(self, field1, field2):
         """
-        使用可能かどうかを判定するメソッド。
+        カード効果を実行するメソッド。
         各カードでオーバーライドする。
         """
         raise NotImplementedError("このメソッドはサブクラスで実装")
