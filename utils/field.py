@@ -1,61 +1,10 @@
-import json
 import random
-from utils.card import PokemonCard, TrainerCard
-
-
-# JSONファイルをロード
-def load_json_file(file_path):
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-def get_stock(deck_name):
-    # カードのステータスが保存されたJSONファイルのパス
-    CARD_STATUS_FILE = "statics/cards/status.json"
-    # カードデータをロード
-    all_cards = load_json_file(CARD_STATUS_FILE)
-
-    # テンプレートデッキJSONファイルのパス
-    TEMPLATE_DECKS_FILE = "statics/template_decks.json"
-    # テンプレートデッキをロード
-    all_template_decks = load_json_file(TEMPLATE_DECKS_FILE)
-
-    for deck in all_template_decks:
-        if deck["デッキ名"] == deck_name:
-            break
-
-    cards = []
-    for card_id in deck["カードid"]:
-        card = next((c for c in all_cards if c["id"] == card_id), None)
-        if card:
-            if card.get("category") == "ポケモン":
-                cards.append(PokemonCard(
-                    name=card.get("name"),
-                    cardRule=card.get("cardRule"),
-                    evolvesFrom=card.get("evolvesFrom"),
-                    stage=card.get("stage"),
-                    type=card.get("type"),
-                    weakness=card.get("weakness"),
-                    hp=card.get("hp"),
-                    attacks=card.get("attacks"),
-                    convertedRetreatCost=card.get("convertedRetreatCost"),
-                    ability=card.get("ability")
-                ))
-            elif card.get("category") == "トレーナーズ":
-                cards.append(TrainerCard(
-                    name=card.get("name"),
-                    subCategory=card.get("subCategory"),
-                    text=card.get("text")
-                ))
-        else:
-            print(f"Warning: Card '{card_id}' not found in the dataset.")
-    
-    random.shuffle(cards)
-    return cards
-        
+from utils.card import PokemonCard, SupportCard, ItemCard
+from utils.init_card import initialize_cards
 
 class Stock:
     def __init__(self, deck_name):
-        self.cards = get_stock(deck_name)
+        self.cards = initialize_cards(deck_name)
 
     def draw_card(self):
         if self.cards:
@@ -71,7 +20,7 @@ class Stock:
     
     def draw_basic_pokemon(self):
         """山札からランダムにたねポケモンを1枚引く"""
-        basic_pokemons = [card for card in self.cards if card.category == "ポケモン" and card.stage == "たね"]
+        basic_pokemons = [card for card in self.cards if isinstance(card, PokemonCard) and card.stage == "たね"]
         if not basic_pokemons:
             print("No basic Pokémon found in the deck.")
             return None
@@ -102,11 +51,12 @@ class Hand:
     def __init__(self, stock):
         self.cards = stock.get_initial_hand()
     
-    def add_card(self, stock):
-        """山札から1枚カードを追加"""
-        card = stock.draw_card()
-        if card:
-            self.cards.append(card)
+    def add_card(self, stock, num=1):
+        """山札からカードを手札に追加"""
+        for _ in range(num):
+            card = stock.draw_card()
+            if card:
+                self.cards.append(card)
 
     def remove_card(self, card):
         """手札からカードを削除"""
@@ -124,7 +74,7 @@ class Hand:
     
     def select_basic_pokemon(self):
         """手札からたねポケモンを選択"""
-        basic_pokemons = [card for card in self.cards if card.category == "ポケモン" and card.stage == "たね"]
+        basic_pokemons = [card for card in self.cards if isinstance(card, PokemonCard) and card.stage == "たね"]
         if not basic_pokemons:
             print("手札にたねポケモンがありません。")
             return None
@@ -198,9 +148,6 @@ class Bench:
     
     def remove_pokemon(self, pokemon):
         self.bench_pokemons.remove(pokemon)
-    
-    def set_bench(self, bench_pokemons):
-        self.bench_pokemons = bench_pokemons
 
 
 class EnergyZone:

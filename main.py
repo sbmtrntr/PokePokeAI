@@ -1,6 +1,5 @@
 import os
 import platform
-from ability import *
 from utils.movement import *
 from utils.field import Field
 from utils.choice import display_choice
@@ -29,7 +28,7 @@ def choice_action(my_field, opponent_field, turn):
     print(f"{my_field.player_name}のターンです")
     opponent_field.display_as_opponent_field()
     my_field.display_as_my_field()
-    choices = display_choice(my_field, turn)
+    choices = display_choice(my_field, opponent_field, turn)
     while True:
         user_input = input("行動を選択してください: ")
         if not user_input.isdigit():  # 数字以外の入力をチェック
@@ -50,19 +49,19 @@ def choice_action(my_field, opponent_field, turn):
 
     
     elif choices[index] == "エネルギーをつける":
-        my_field = attach_energy(my_field)
+        attach_energy(my_field)
 
     elif choices[index] == "逃げる":
-        my_field = escape(my_field)
+        escape(my_field)
 
     elif choices[index] == "たねポケモンをベンチに出す":
-        my_field = hand_to_bench(my_field)
+        hand_to_bench(my_field)
     
     elif choices[index] == "進化する":
-        my_field = evolve(my_field)
+        evolve(my_field)
 
-    # elif choices[index] == "サポートカードを使用する":
-    #     Player1_field, Player2_field = use_support(Player1_field, Player2_field)
+    elif choices[index] == "サポートカードを使用する":
+        use_support(my_field, opponent_field)
 
     # elif choices[index] == "グッズを使用する":
     #     Player1_field, Player2_field = use_item(Player1_field, Player2_field)
@@ -71,7 +70,7 @@ def choice_action(my_field, opponent_field, turn):
     #     Player1_field, Player2_field = use_ability(Player1_field, Player2_field)
 
     elif choices[index] == "攻撃する":
-        my_field, opponent_field = attack(my_field, opponent_field)
+        attack(my_field, opponent_field)
 
     return None
 

@@ -1,3 +1,6 @@
+from ability import *
+from utils.card import *
+
 # エネルギーをつける
 def attach_energy(field):
     print("どのポケモンにエネルギーをつけますか？")
@@ -8,7 +11,7 @@ def attach_energy(field):
         user_input = input("ポケモンを選択してください(戻る: q): ")
         if not user_input.isdigit():  # 数字以外の入力をチェック
             if user_input == "q":
-                return field
+                return 
             print("数字を入力してください")
             continue
         index = int(user_input) - 1
@@ -16,7 +19,7 @@ def attach_energy(field):
             break
         print("無効な入力です。もう一度入力してください")
     field.energy_zone.attach_energy(pokemon_list[index])
-    return field
+    return 
 
 # 逃げる
 def escape(field):
@@ -27,7 +30,7 @@ def escape(field):
         user_input = input("ポケモンを選択してください(戻る: q): ")
         if not user_input.isdigit():  # 数字以外の入力をチェック
             if user_input == "q":
-                return field
+                return 
             print("数字を入力してください")
             continue
         index = int(user_input) - 1
@@ -35,14 +38,14 @@ def escape(field):
             break
         print("無効な入力です。もう一度入力してください")
     field.battle_field.escape_to_bench(field.bench, index)
-    return field
+    return 
 
 # たねポケモンをベンチに出す
 def hand_to_bench(field):
     # 手札からたねポケモンを抽出(本当は進化もある)
     pokemon_list = []
     for card in field.hand.get_hand():
-        if card.category == "ポケモン" and card.stage == "たね":
+        if isinstance(card, PokemonCard) and card.stage == "たね":
             pokemon_list.append(card)
     print("どのポケモンをベンチに出しますか？")
     for i, pokemon in enumerate(pokemon_list):
@@ -51,7 +54,7 @@ def hand_to_bench(field):
         user_input = input("ポケモンを選択してください(戻る: q): ")
         if not user_input.isdigit():  # 数字以外の入力をチェック
             if user_input == "q":
-                return field
+                return 
             print("数字を入力してください")
             continue
         index = int(user_input) - 1
@@ -60,7 +63,7 @@ def hand_to_bench(field):
         print("無効な入力です。もう一度入力してください")
     field.bench.add_pokemon(pokemon_list[index])
     field.hand.remove_card(pokemon_list[index])
-    return field
+    return 
 
 # 進化する
 def evolve(field):
@@ -69,7 +72,7 @@ def evolve(field):
     # 手札から進化可能なポケモンを抽出
     can_evolve_pokemon = set() #同じポケモンが重複するのを考慮
     for card in field.hand.get_hand():
-        if card.category == "ポケモン" and card.evolvesFrom in [pokemon.name for pokemon in pokemon_list]:
+        if isinstance(card, PokemonCard) and card.evolvesFrom in [pokemon.name for pokemon in pokemon_list]:
             for idx, pokemon in enumerate(pokemon_list):
                 if pokemon.name == card.evolvesFrom and not pokemon.has_evolved_this_turn:
                     can_evolve_pokemon.add((idx, pokemon))
@@ -81,7 +84,7 @@ def evolve(field):
         user_input = input("ポケモンを選択してください(戻る: q): ")
         if not user_input.isdigit():  # 数字以外の入力をチェック
             if user_input == "q":
-                return field
+                return 
             print("数字を入力してください")
             continue
         index = int(user_input) - 1
@@ -89,11 +92,11 @@ def evolve(field):
             break
         print("無効な入力です。もう一度入力してください")
     for card in field.hand.get_hand():
-        if card.category == "ポケモン" and card.evolvesFrom == can_evolve_pokemon[index][1].name:
+        if isinstance(card, PokemonCard) and card.evolvesFrom == can_evolve_pokemon[index][1].name:
             can_evolve_pokemon[index][1].evolve(card)
             break
     field.hand.remove_card(card)
-    return field
+    return 
 
 
 # 攻撃する
@@ -101,27 +104,27 @@ def attack(field1, field2):
     # 打てる技を表示
     available_attacks = []
     for i, attack in enumerate(field1.battle_field.get_battle_pokemon().attacks):
-        required_energy = attack['cost'].copy()
-        energy_copy = field1.battle_field.get_battle_pokemon().energy.copy() # 元のエネルギー状態を変更しないためコピー
-        can_attack = True
-        # 各エネルギータイプの条件をチェック
-        for energy_type, amount_needed in required_energy.items():
-            if energy_type != "無":
-                # 特定タイプのエネルギーを消費
-                if energy_copy[energy_type] < amount_needed:
-                    can_attack = False
-                    break
-                else:
-                    energy_copy[energy_type] -= amount_needed
-            else:
-                # 無色エネルギーを全体の合計から消費
-                total_energy = sum(energy_copy.values())
-                if total_energy < amount_needed:
-                    can_attack = False
-                    break
-                else:
-                    # 全体から無色エネルギーを消費
-                    total_energy -= amount_needed
+        can_attack = False
+        # 必要なエネルギーコストをコピーして計算用に保持
+        required_cost = attack['cost'].copy()
+        available_energy = field1.battle_field.get_battle_pokemon().energy.copy()
+
+        # 無色エネルギーのコストを取得
+        colorless_cost = required_cost.pop("無", 0)
+
+        # 各エネルギータイプのコストをチェック
+        for energy_type, energy_cost in required_cost.items():
+            if available_energy.get(energy_type, 0) < energy_cost:
+                # 必要エネルギーが足りない場合はこの攻撃はできない
+                break
+            # 必要分を消費する
+            available_energy[energy_type] -= energy_cost
+            
+        # 無色エネルギーの処理（他のエネルギーで代用可能）
+        total_available_energy = sum(available_energy.values())
+        if total_available_energy >= colorless_cost:
+            can_attack = True
+
         if can_attack:
             available_attacks.append(attack)
 
@@ -133,7 +136,7 @@ def attack(field1, field2):
         user_input = input("技を選択してください(戻る: q): ")
         if not user_input.isdigit():  # 数字以外の入力をチェック
             if user_input == "q":
-                return field1, field2
+                return 
             print("数字を入力してください")
             continue
         index = int(user_input) - 1
@@ -180,15 +183,33 @@ def attack(field1, field2):
             else:
                 exit(print(f"{field1.player_name}の勝利です"))
 
-    return field1, field2
+    return
 
-# # サポートカードを使用する
-# def use_support(field1, field2):
-#     print("どのサポートカードを使用しますか？")
-#     for i, card in enumerate(field.hand.get_hand()):
-#         print(f"{i+1}. {card.name}")
-#     index = int(input("選択肢からサポートカードを選択してください: ")) - 1
-#     support_cards[index].use()
+# サポートカードを使用する
+def use_support(field1, field2):
+    print("どのサポートカードを使用しますか？")
+    support_cards = []
+    for card in field1.hand.get_hand():
+        if isinstance(card, SupportCard) and card.check_available(field1, field2):
+            support_cards.append(card)
+    for i, card in enumerate(support_cards):
+        print(f"{i+1}. {card.name}")
+    while True:
+        user_input = input("サポートカードを選択してください(戻る: q): ")
+        if not user_input.isdigit():  # 数字以外の入力をチェック
+            if user_input == "q":
+                return
+            print("数字を入力してください")
+            continue
+        index = int(user_input) - 1
+        if 0 <= index < len(support_cards):
+            break
+        print("無効な入力です。もう一度入力してください")
+    support_cards[index](field1, field2)
+    field1.hand.remove_card(support_cards[index])
+    field1.trash.append(support_cards[index])
+    field1.used_support = True
+    return
 
 # # グッズを使用する
 # def use_item(field1, field2):

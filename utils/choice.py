@@ -1,21 +1,23 @@
-def display_choice(field, turn):
+from utils.card import *
+
+def display_choice(field1, field2, turn):
     choices = ["ターンを終了", "降参"]
 
-    if can_escape(field):
+    if can_escape(field1):
         choices.append("逃げる")
-    if can_hand2bench(field):
+    if can_hand2bench(field1):
         choices.append("たねポケモンをベンチに出す")
-    if can_evolve(field, turn):
+    if can_evolve(field1, turn):
         choices.append("進化する")
-    if can_use_support(field):
+    if can_use_support(field1, field2):
         choices.append("サポートカードを使用する")
-    if can_use_item(field):
+    if can_use_item(field1):
         choices.append("グッズを使用する")
-    if can_use_ability(field):
+    if can_use_ability(field1):
         choices.append("特性を使用する")
-    if can_attach_energy(field):
+    if can_attach_energy(field1):
         choices.append("エネルギーをつける")
-    if can_attack(field):
+    if can_attack(field1):
         choices.append("攻撃する")
 
     for i, choice in enumerate(choices):
@@ -38,7 +40,7 @@ def can_hand2bench(field):
     if len(field.bench.get_bench_pokemon()) == 3:
         return False
     for card in field.hand.get_hand():
-        if card.category == "ポケモン" and card.stage == "たね":
+        if isinstance(card, PokemonCard) and card.stage == "たね":
             return True    
     return False
 
@@ -48,7 +50,7 @@ def can_evolve(field, turn):
         return False
     pokemon_names = [field.battle_field.get_battle_pokemon().name] + [pokemon.name for pokemon in field.bench.get_bench_pokemon()]
     for card in field.hand.get_hand():
-        if card.category == "ポケモン" and card.evolvesFrom in pokemon_names:
+        if isinstance(card, PokemonCard) and card.evolvesFrom in pokemon_names:
             # このターンに手札から出していないかつ進化していないポケモンがいる場合は進化できる
             for pokemon in [field.battle_field.get_battle_pokemon()] + field.bench.get_bench_pokemon():
                 if pokemon.name == card.evolvesFrom and not pokemon.has_been_hand_to_bench and not pokemon.has_evolved_this_turn:
@@ -56,19 +58,19 @@ def can_evolve(field, turn):
     return False
 
             
-def can_use_support(field):
+def can_use_support(field1, field2):
     # サポートカードを使用済みの場合は使用できない
-    if field.used_support:
+    if field1.used_support:
         return False
-    for card in field.hand.get_hand():
-        if card.category == "トレーナーズ" and card.subCategory == "サポート" :
+    for card in field1.hand.get_hand():
+        if isinstance(card, SupportCard) and card.check_available(field1, field2):
             return True
     return False
 
 
 def can_use_item(field):
     for card in field.hand.get_hand():
-        if card.category == "トレーナーズ" and card.subCategory == "グッズ":
+        if isinstance(card, ItemCard):
             return True
     return False
 

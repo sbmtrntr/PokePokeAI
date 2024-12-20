@@ -1,5 +1,4 @@
 from collections import defaultdict
-from ability.support import *
 
 class Card:
     def __init__(self, category, name):
@@ -79,24 +78,55 @@ class TrainerCard(Card):
         print(f"{self.text}")
         # 枠の下部
         print(f"+{'ー' * WIDTH}+\n")
+    
+    def check_available(self, field1, field2):
+        """
+        使用可能かどうかを判定するメソッド。
+        各カードでオーバーライドする。
+        """
+        raise NotImplementedError("このメソッドはサブクラスで実装")
 
-class ItemCard(TrainerCard):
-    def __init__(self, name, subCategory, text):
-        super().__init__(name, subCategory, text)
-        self.subCategory = "アイテム"
+    def __call__(self, field1, field2):
+        """
+        カード効果を実行するメソッド。
+        各カードでオーバーライドする。
+        """
+        raise NotImplementedError("このメソッドはサブクラスで実装")
 
-    def use(self, field):
-        print(f"{self.name}を使用")
 
 class SupportCard(TrainerCard):
-    def __init__(self, name, subCategory, text):
-        super().__init__(name, subCategory, text)
-        self.subCategory = "サポート"
+    def __init__(self, name, text):
+        super().__init__(name=name, subCategory="サポート", text=text)
 
-    def use(self, field):
-        print(f"{self.name}を使用")
-        if self.name == "博士の研究":
-            field = professor_research(field)
-        elif self.name == "エリカ":
-            field = erika(field)
-        return field
+    def check_available(self, field1, field2):
+        """
+        使用可能かどうかを判定するメソッド。
+        各カードでオーバーライドする。
+        """
+        raise NotImplementedError("このメソッドはサブクラスで実装")
+
+    def __call__(self, field1, field2):
+        """
+        カード効果を実行するメソッド。
+        各カードでオーバーライドする。
+        """
+        raise NotImplementedError("このメソッドはサブクラスで実装")
+
+
+class ItemCard(TrainerCard):
+    def __init__(self, name, text):
+        super().__init__(name=name, subCategory="グッズ", text=text)
+
+    def __call__(self, field1, field2):
+        """
+        カード効果を実行するメソッド。
+        各カードでオーバーライドする。
+        """
+        raise NotImplementedError("このメソッドはサブクラスで実装")
+
+    def check_available(self, field1, field2):
+        """
+        使用可能かどうかを判定するメソッド。
+        各カードでオーバーライドする。
+        """
+        raise NotImplementedError("このメソッドはサブクラスで実装")
