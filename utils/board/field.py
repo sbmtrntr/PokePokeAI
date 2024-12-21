@@ -1,6 +1,6 @@
 import random
-from utils.card import PokemonCard, SupportCard, ItemCard
-from utils.init_card import initialize_cards
+from utils.card.card import PokemonCard, SupportCard, ItemCard
+from utils.card.init_card import initialize_cards
 
 class Stock:
     def __init__(self, deck_name):
@@ -84,7 +84,7 @@ class Hand:
         self.cards = hand
 
 
-class BattleField:
+class Battle:
     def __init__(self, hand):
         self.battle_pokemon = hand.select_basic_pokemon()  # バトル場
         self.escape_energy = {"ス":0}
@@ -174,7 +174,7 @@ class Field:
         self.point = 0
         self.stock = Stock(deck_name)
         self.hand = Hand(self.stock)
-        self.battle_field = BattleField(self.hand)
+        self.battle = Battle(self.hand)
         self.bench = Bench()
         self.energy_zone = EnergyZone(energy_type)
         self.trash = []
@@ -184,46 +184,13 @@ class Field:
         self.escaped = False
     
     def reset_turn(self):
-        self.battle_field.escape_energy = {"ス":0}
+        self.battle.escape_energy = {"ス":0}
         self.used_support = False
         self.hand.add_card(self.stock.draw_card())
         self.attacked = False
         self.turn_end = False
         self.escaped = False
-        for pokemon in [self.battle_field.get_battle_pokemon()] + self.bench.get_bench_pokemon():
+        for pokemon in [self.battle.get_battle_pokemon()] + self.bench.get_bench_pokemon():
             pokemon.has_evolved_this_turn = False
             pokemon.has_been_hand_to_bench = False
-
-    def display_as_my_field(self):
-        print(f"\n--- {self.player_name} のフィールド状況 --- {self.point}pt")
-        print(f"\n【バトルポケモン】スピーダー{self.battle_field.escape_energy['ス']}個使用")
-        battle_pokemon = self.battle_field.get_battle_pokemon()
-        battle_pokemon.display_card()
-
-        print("\n【ベンチポケモン】")
-        for i, bench_pokemon in enumerate(self.bench.get_bench_pokemon()):
-            print(f"ベンチ{i+1}")
-            bench_pokemon.display_card()
-
-        print("\n【手札】")
-        for i, hand_card in enumerate(self.hand.get_hand()):
-            print(f"手札{i+1} {hand_card.name}")
-
-        print("\n【エネルギーゾーン】")
-        print(f"現在のエネルギー: {'なし' if self.energy_zone.current_energy is None else self.energy_zone.current_energy}")
-        print(f"次のエネルギー: {self.energy_zone.next_energy}")
-        print("----------------------------")
-    
-    def display_as_opponent_field(self):
-        print("\n【ベンチポケモン】")
-        for i, bench_pokemon in enumerate(self.bench.get_bench_pokemon()):
-            print(f"ベンチ{i+1}")
-            bench_pokemon.display_card()
-        
-        print("\n【バトルポケモン】")
-        battle_pokemon = self.battle_field.get_battle_pokemon()
-        battle_pokemon.display_card()
-        print(f"\n--- {self.player_name} のフィールド状況 --- {self.point}pt")
-        
-
-        
+            

@@ -1,4 +1,4 @@
-from utils.card import ItemCard
+from utils.card.card import ItemCard
 
 # モンスターボール
 class Monsterball(ItemCard):
@@ -26,7 +26,7 @@ class Speeder(ItemCard):
         return True
 
     def __call__(self, field1, field2):
-        field1.battle_field.escape_energy["ス"] += 1
+        field1.battle.escape_energy["ス"] += 1
         return
 
 # きずぐすり
@@ -36,14 +36,14 @@ class Potion(ItemCard):
     
     def check_available(self, field1, field2):
         # ポケモンのHPが満タンの時は使えない
-        pokemon_list = [field1.battle_field.get_battle_pokemon()] + field1.bench.get_bench_pokemon()
+        pokemon_list = [field1.battle.get_battle_pokemon()] + field1.bench.get_bench_pokemon()
         for pokemon in pokemon_list:
             if pokemon.hp < pokemon.max_hp:
                 return True
         return False
 
     def __call__(self, field1, field2):
-        pokemon_list = [field1.battle_field.get_battle_pokemon()] + field1.bench.get_bench_pokemon()
+        pokemon_list = [field1.battle.get_battle_pokemon()] + field1.bench.get_bench_pokemon()
         eligible_pokemon = []
         for pokemon in pokemon_list:
             if pokemon.hp < pokemon.max_hp:

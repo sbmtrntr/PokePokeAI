@@ -1,11 +1,11 @@
 from ability import *
-from utils.card import *
+from utils.card.card import *
 
 # エネルギーをつける
 def attach_energy(field):
     # バトル場
     eligible_pokemon = {}
-    battle_pokemon = field.battle_field.get_battle_pokemon()
+    battle_pokemon = field.battle.get_battle_pokemon()
     eligible_pokemon["バトル場"] = battle_pokemon
 
     # ベンチポケモン
@@ -45,7 +45,7 @@ def escape(field):
         if 0 <= index < len(field.bench.get_bench_pokemon()):
             break
         print("無効な入力です。もう一度入力してください")
-    field.battle_field.escape_to_bench(field.bench, index)
+    field.battle.escape_to_bench(field.bench, index)
     return 
 
 # たねポケモンをベンチに出す
@@ -76,7 +76,7 @@ def hand_to_bench(field):
 # 進化する
 def evolve(field):
     # バトル場とベンチのポケモンを取得
-    pokemon_list = [field.battle_field.get_battle_pokemon()] + field.bench.get_bench_pokemon()
+    pokemon_list = [field.battle.get_battle_pokemon()] + field.bench.get_bench_pokemon()
     # 手札から進化可能なポケモンを抽出
     can_evolve_pokemon = set() #同じポケモンが重複するのを考慮
     for card in field.hand.get_hand():
@@ -111,11 +111,11 @@ def evolve(field):
 def attack(field1, field2):
     # 打てる技を表示
     available_attacks = []
-    for i, attack in enumerate(field1.battle_field.get_battle_pokemon().attacks):
+    for i, attack in enumerate(field1.battle.get_battle_pokemon().attacks):
         can_attack = False
         # 必要なエネルギーコストをコピーして計算用に保持
         required_cost = attack['cost'].copy()
-        available_energy = field1.battle_field.get_battle_pokemon().energy.copy()
+        available_energy = field1.battle.get_battle_pokemon().energy.copy()
 
         # 無色エネルギーのコストを取得
         colorless_cost = required_cost.pop("無", 0)
@@ -154,26 +154,26 @@ def attack(field1, field2):
 
     # ダメージ計算
     damage = available_attacks[index]['damage']
-    if not damage == 0 and field2.battle_field.get_battle_pokemon().weakness == field1.battle_field.get_battle_pokemon().type:
+    if not damage == 0 and field2.battle.get_battle_pokemon().weakness == field1.battle.get_battle_pokemon().type:
         damage += 20
 
     # 相手のバトル場のポケモンが攻撃を受ける
-    field2.battle_field.get_battle_pokemon().hp = max(field2.battle_field.get_battle_pokemon().hp - damage, 0)
+    field2.battle.get_battle_pokemon().hp = max(field2.battle.get_battle_pokemon().hp - damage, 0)
     field1.attacked = True
 
     # 相手のバトル場のポケモンのダメージが0になったら
-    if field2.battle_field.get_battle_pokemon().hp == 0:
+    if field2.battle.get_battle_pokemon().hp == 0:
         # 相手のバトル場のポケモンがexだったら2ポイント追加
-        if field2.battle_field.get_battle_pokemon().cardRule == "ex":
+        if field2.battle.get_battle_pokemon().cardRule == "ex":
             field1.point += 2
         else:
             field1.point += 1
-        print(f"{field2.battle_field.get_battle_pokemon().name}が倒れた！")
+        print(f"{field2.battle.get_battle_pokemon().name}が倒れた！")
         if field1.point >= 3:
             exit(print(f"{field1.player_name}の勝利です"))
         else:
-            field2.trash.append(field2.battle_field.get_battle_pokemon())
-            field2.battle_field.set_battle_pokemon(None)
+            field2.trash.append(field2.battle.get_battle_pokemon())
+            field2.battle.set_battle_pokemon(None)
             if len(field2.bench.get_bench_pokemon()) > 0:
                 while True:
                     for i, pokemon in enumerate(field2.bench.get_bench_pokemon()):
@@ -186,7 +186,7 @@ def attack(field1, field2):
                     if 0 <= index < len(field2.bench.get_bench_pokemon()):
                         break
                     print("無効な入力です。もう一度入力してください")
-                field2.battle_field.set_battle_pokemon(field2.bench.get_bench_pokemon()[index])
+                field2.battle.set_battle_pokemon(field2.bench.get_bench_pokemon()[index])
                 field2.bench.remove_pokemon(field2.bench.get_bench_pokemon()[index])
             else:
                 exit(print(f"{field1.player_name}の勝利です"))

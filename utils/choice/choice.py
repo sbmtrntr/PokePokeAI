@@ -1,4 +1,49 @@
-from utils.card import *
+from utils.card.card import *
+from utils.choice.movement import *
+
+def choice_action(my_field, opponent_field, turn):
+    choices = display_choice(my_field, opponent_field, turn)
+    while True:
+        user_input = input("行動を選択してください: ")
+        if not user_input.isdigit():  # 数字以外の入力をチェック
+            print("数字を入力してください")
+            continue
+        index = int(user_input) - 1
+        if 0 <= index < len(choices):
+            break
+        print("無効な入力です。もう一度入力してください")
+    
+    if choices[index] == "ターンを終了": 
+        my_field.turn_end = True
+
+    elif choices[index] == "降参": 
+        user_input = input("本当に降参しますか？(y/n): ")
+        if user_input == "y":
+            exit(print(f"{my_field.player_name}の負けです"))
+
+    
+    elif choices[index] == "エネルギーをつける":
+        attach_energy(my_field)
+
+    elif choices[index] == "逃げる":
+        escape(my_field)
+
+    elif choices[index] == "たねポケモンをベンチに出す":
+        hand_to_bench(my_field)
+    
+    elif choices[index] == "進化する":
+        evolve(my_field)
+
+    elif choices[index] == "サポートカードを使用する":
+        use_support(my_field, opponent_field)
+
+    elif choices[index] == "グッズを使用する":
+        use_item(my_field, opponent_field)
+
+    elif choices[index] == "攻撃する":
+        attack(my_field, opponent_field)
+
+    return None
 
 def display_choice(field1, field2, turn):
     choices = ["ターンを終了", "降参"]
@@ -33,9 +78,9 @@ def can_escape(field):
     if len(field.bench.get_bench_pokemon()) == 0:
         return False
     # 逃げエネ <= エネルギーの合計 + 逃げエネ軽減カードの効果
-    total_energy = sum([value for value in field.battle_field.get_battle_pokemon().energy.values()])
-    escape_reduction = field.battle_field.escape_energy["ス"]
-    if field.battle_field.get_battle_pokemon().convertedRetreatCost <= total_energy + escape_reduction:
+    total_energy = sum([value for value in field.battle.get_battle_pokemon().energy.values()])
+    escape_reduction = field.battle.escape_energy["ス"]
+    if field.battle.get_battle_pokemon().convertedRetreatCost <= total_energy + escape_reduction:
         return True
     else:
         return False
@@ -53,11 +98,11 @@ def can_evolve(field, turn):
     # 2ターン目までは進化できない
     if turn <= 2:
         return False
-    pokemon_names = [field.battle_field.get_battle_pokemon().name] + [pokemon.name for pokemon in field.bench.get_bench_pokemon()]
+    pokemon_names = [field.battle.get_battle_pokemon().name] + [pokemon.name for pokemon in field.bench.get_bench_pokemon()]
     for card in field.hand.get_hand():
         if isinstance(card, PokemonCard) and card.evolvesFrom in pokemon_names:
             # このターンに手札から出していないかつ進化していないポケモンがいる場合は進化できる
-            for pokemon in [field.battle_field.get_battle_pokemon()] + field.bench.get_bench_pokemon():
+            for pokemon in [field.battle.get_battle_pokemon()] + field.bench.get_bench_pokemon():
                 if pokemon.name == card.evolvesFrom and not pokemon.has_been_hand_to_bench and not pokemon.has_evolved_this_turn:
                     return True
     return False
@@ -80,7 +125,7 @@ def can_use_item(field1, field2):
     return False
 
 def can_use_ability(field):
-    for pokemon in [field.battle_field.get_battle_pokemon()] + field.bench.get_bench_pokemon():
+    for pokemon in [field.battle.get_battle_pokemon()] + field.bench.get_bench_pokemon():
         if pokemon.ability is not None:
             return True
     return False
@@ -93,10 +138,10 @@ def can_attach_energy(field):
         return False
     
 def can_attack(field):
-    for attack in field.battle_field.get_battle_pokemon().attacks:
+    for attack in field.battle.get_battle_pokemon().attacks:
         # 必要なエネルギーコストをコピーして計算用に保持
         required_cost = attack['cost'].copy()
-        available_energy = field.battle_field.get_battle_pokemon().energy.copy()
+        available_energy = field.battle.get_battle_pokemon().energy.copy()
 
         # 無色エネルギーのコストを取得
         colorless_cost = required_cost.pop("無", 0)

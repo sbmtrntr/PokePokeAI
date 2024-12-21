@@ -1,8 +1,8 @@
 import os
 import platform
-from utils.movement import *
-from utils.field import Field
-from utils.choice import display_choice
+from utils.choice.movement import *
+from utils.board.field import Field
+from utils.choice.choice import choice_action
 from utils.coin_toss import do_coin_toss
 
 def clear_console():
@@ -15,57 +15,13 @@ def check_game_over(Player1_field, Player2_field):
     if Player2_field.point >= 3:
         print("Player2の勝利です")
         return True
-    if Player1_field.battle_field.get_battle_pokemon() == None:
+    if Player1_field.battle.get_battle_pokemon() == None:
         print("Player2の勝利です")
         return True
-    if Player2_field.battle_field.get_battle_pokemon() == None:
+    if Player2_field.battle.get_battle_pokemon() == None:
         print("Player1の勝利です")
         return True
     return False
-
-def choice_action(my_field, opponent_field, turn):
-    choices = display_choice(my_field, opponent_field, turn)
-    while True:
-        user_input = input("行動を選択してください: ")
-        if not user_input.isdigit():  # 数字以外の入力をチェック
-            print("数字を入力してください")
-            continue
-        index = int(user_input) - 1
-        if 0 <= index < len(choices):
-            break
-        print("無効な入力です。もう一度入力してください")
-    
-    if choices[index] == "ターンを終了": 
-        my_field.turn_end = True
-
-    elif choices[index] == "降参": 
-        user_input = input("本当に降参しますか？(y/n): ")
-        if user_input == "y":
-            exit(print(f"{my_field.player_name}の負けです"))
-
-    
-    elif choices[index] == "エネルギーをつける":
-        attach_energy(my_field)
-
-    elif choices[index] == "逃げる":
-        escape(my_field)
-
-    elif choices[index] == "たねポケモンをベンチに出す":
-        hand_to_bench(my_field)
-    
-    elif choices[index] == "進化する":
-        evolve(my_field)
-
-    elif choices[index] == "サポートカードを使用する":
-        use_support(my_field, opponent_field)
-
-    elif choices[index] == "グッズを使用する":
-        use_item(my_field, opponent_field)
-
-    elif choices[index] == "攻撃する":
-        attack(my_field, opponent_field)
-
-    return None
 
 def main(Player1_field, Player2_field):
     print("\n対戦よろしくお願いします")

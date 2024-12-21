@@ -1,6 +1,6 @@
 import json
 import random
-from utils.card import PokemonCard, SupportCard, ItemCard
+from utils.card.card import PokemonCard, SupportCard, ItemCard
 from ability.support import *
 from ability.item import *
 # JSONファイルをロード

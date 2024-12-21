@@ -1,4 +1,4 @@
-from utils.card import SupportCard
+from utils.card.card import SupportCard
 
 # 博士の研究
 class ProfessorResearch(SupportCard):
@@ -41,7 +41,7 @@ class Erika(SupportCard):
         field2: 相手のフィールド（効果に関係ないが統一性のため引数に含む）
         """
         # 自分のバトル場とベンチに草タイプのポケモンがいるかチェック
-        for pokemon in [field1.battle_field.get_battle_pokemon(), *field1.bench.get_bench_pokemon()]:
+        for pokemon in [field1.battle.get_battle_pokemon(), *field1.bench.get_bench_pokemon()]:
             if pokemon.type == "草" and pokemon.hp != pokemon.max_hp:
                 return True
         return False
@@ -56,7 +56,7 @@ class Erika(SupportCard):
         eligible_pokemon = {}
 
         # バトル場
-        battle_pokemon = field1.battle_field.get_battle_pokemon()
+        battle_pokemon = field1.battle.get_battle_pokemon()
         if battle_pokemon.type == "草" and battle_pokemon.hp != battle_pokemon.max_hp:
             eligible_pokemon["バトルポケモン"] = battle_pokemon
 
@@ -95,7 +95,7 @@ class Natsume(SupportCard):
         print("ナツメを使用します。相手のバトル場とベンチを入れ替えます。")
         
         # 相手のバトル場のポケモン
-        battle_pokemon = field2.battle_field.get_battle_pokemon()
+        battle_pokemon = field2.battle.get_battle_pokemon()
 
         # 相手のベンチポケモンを選択
         bench_pokemon_list = field2.bench.get_bench_pokemon()
@@ -118,7 +118,7 @@ class Natsume(SupportCard):
         selected_bench_pokemon = bench_pokemon_list[index]
 
         # 入れ替え処理
-        field2.battle_field.set_battle_pokemon(selected_bench_pokemon)
+        field2.battle.set_battle_pokemon(selected_bench_pokemon)
         field2.bench.get_bench_pokemon()[index] = battle_pokemon
 
         print(f"{battle_pokemon.name} と {selected_bench_pokemon.name} を入れ替えました。")
