@@ -1,5 +1,34 @@
 [
     {
+        "id": "A1-000",
+        "category": "ポケモン",
+        "name": "リンタマンex",
+        "stage": "たね",
+        "type": "神",
+        "weakness": "ない",
+        "hp": 990,
+        "attacks": [
+            {
+                "name": "ビンタ",
+                "damage": 990,
+                "cost": {
+                    "無": 1
+                },
+                "convertedEnergyCost": 1
+            }
+        ],
+        "retreatCost": {
+            "無": 0
+        },
+        "convertedRetreatCost": 0,
+        "set": {
+            "name": "最強の遺伝子",
+            "releaseDate": "2024/10/30",
+            "subName": "ミュウツー"
+        },
+        "rarity": 1
+    },
+    {
         "id": "A1-001",
         "category": "ポケモン",
         "name": "フシギダネ",

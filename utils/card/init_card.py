@@ -1,8 +1,8 @@
 import json
 import random
 from utils.card.card import PokemonCard, SupportCard, ItemCard
-from ability.support import *
-from ability.item import *
+from utils.card.ability.support import *
+from utils.card.ability.item import *
 # JSONファイルをロード
 def load_json_file(file_path):
     with open(file_path, "r", encoding="utf-8") as f:

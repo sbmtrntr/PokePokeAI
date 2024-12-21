@@ -1,4 +1,4 @@
-from ability import *
+from utils.card.ability.support import *
 from utils.card.card import *
 
 # エネルギーをつける
@@ -13,7 +13,7 @@ def attach_energy(field):
         eligible_pokemon[f"ベンチ{i+1}"] = bench_pokemon
     print("どのポケモンにエネルギーをつけますか？")
     for i, (key, pokemon) in enumerate(eligible_pokemon.items(), 1):
-        print(f"{i}: {key} {pokemon.name}")
+        print(f"{i}. {key} {pokemon.name}")
     while True:
         user_input = input("ポケモンを選択してください(戻る: q): ")
         if not user_input.isdigit():  # 数字以外の入力をチェック

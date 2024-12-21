@@ -1,29 +1,10 @@
-import os
-import platform
-from utils.choice.movement import *
-from utils.board.field import Field
-from utils.choice.choice import choice_action
+from utils.board import Board, Field
+from utils.choice import choice_action
 from utils.coin_toss import do_coin_toss
 
-def clear_console():
-    os.system('cls' if platform.system() == 'Windows' else 'clear')
-
-def check_game_over(Player1_field, Player2_field):
-    if Player1_field.point >= 3:
-        print("Player1の勝利です")
-        return True
-    if Player2_field.point >= 3:
-        print("Player2の勝利です")
-        return True
-    if Player1_field.battle.get_battle_pokemon() == None:
-        print("Player2の勝利です")
-        return True
-    if Player2_field.battle.get_battle_pokemon() == None:
-        print("Player1の勝利です")
-        return True
-    return False
 
 def main(Player1_field, Player2_field):
+
     print("\n対戦よろしくお願いします")
 
     # 先行後攻決め
@@ -34,45 +15,40 @@ def main(Player1_field, Player2_field):
         first_turn = "Player2"
         print("Player2が先行です")
 
-    turn = 0
+    turn = [0]
+    board = Board(Player1_field, Player2_field, turn, first_turn)
+
+    # 実際はここでたねポケモンを出す処理が必要
 
     # ゲーム開始
     while True:
+        turn[0] += 1
 
-        turn += 1
-        print(f"\n---{turn}ターン目---")
-
-        if (turn % 2 == 1) == (first_turn == "Player1"):
+        # Player1のターン
+        if (turn[0] % 2 == 1) == (first_turn == "Player1"):
             Player1_field.reset_turn()
             # エネルギーを生成
-            if not turn == 1:
+            if not turn[0] == 1:
                 Player1_field.energy_zone.generate_energy()
             while True:
-                clear_console()
-                print(f"\n---{turn}ターン目---")
-                print(f"\n{Player1_field.player_name}のターンです")
-                Player2_field.display_as_opponent_field()
-                Player1_field.display_as_my_field()
+                board.display_board()
                 choice_action(Player1_field, Player2_field, turn)
                 if Player1_field.attacked or Player1_field.turn_end:
                     break
 
+        # Player2のターン
         else:
             Player2_field.reset_turn()
             # エネルギーを生成
-            if not turn == 1:
+            if not turn[0] == 1:
                 Player2_field.energy_zone.generate_energy()
             while True:
-                clear_console()
-                print(f"\n---{turn}ターン目---")
-                print(f"\n{Player2_field.player_name}のターンです")
-                Player1_field.display_as_opponent_field()
-                Player2_field.display_as_my_field()
+                board.display_board()
                 choice_action(Player2_field, Player1_field, turn)
                 if Player2_field.attacked or Player2_field.turn_end:
                     break
         
-        if check_game_over(Player1_field, Player2_field):
+        if Player1_field.point >= 3 or Player2_field.point >= 3:
             break
         
     print("\n対戦ありがとうございました")

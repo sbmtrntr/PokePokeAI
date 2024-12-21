@@ -1,4 +1,5 @@
 from utils.card.card import SupportCard
+import time
 
 # 博士の研究
 class ProfessorResearch(SupportCard):
@@ -22,12 +23,13 @@ class ProfessorResearch(SupportCard):
         # 山札からカードを2枚ドロー（山札の残りが2枚未満の場合はその分だけドロー）
         draw_count = min(2, field1.stock.get_remaining_cards())
         for _ in range(draw_count):
-            pokemon = field1.stock.draw_card()
-            if pokemon is not None:
-                field1.hand.add_card(pokemon)
+            card = field1.stock.draw_card()
+            if card is not None:
+                field1.hand.add_card(card)
+                print(f"山札から{card.name}を引きました。")
 
-        print(f"博士の研究を使用しました。山札から{draw_count}枚のカードを引きました。")
-
+        time.sleep(1.5)
+        return
 
 # エリカ
 class Erika(SupportCard):
@@ -80,7 +82,9 @@ class Erika(SupportCard):
         # HPを50回復（最大HPを超えないように調整）
         heal_amount = 50
         selected_pokemon.hp = min(selected_pokemon.hp + heal_amount, selected_pokemon.max_hp)
-        print(f"{selected_pokemon.name}のHPを{heal_amount}回復しました！")
+        print(f"{selected_pokemon.name}のHPを回復しました")
+        time.sleep(1.5)
+        return
 
 # ナツメ
 class Natsume(SupportCard):
@@ -122,4 +126,5 @@ class Natsume(SupportCard):
         field2.bench.get_bench_pokemon()[index] = battle_pokemon
 
         print(f"{battle_pokemon.name} と {selected_bench_pokemon.name} を入れ替えました。")
+        time.sleep(1.5)
         return

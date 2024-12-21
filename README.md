@@ -1,6 +1,9 @@
 ## ポケポケの対戦AI
 を作りたい
 
+## UI
+![alt text](image.png)
+
 ## Todo
 - [x] すべてのカードのステータス・効果を`statics/cards/status.yaml`に記載する(12/16)
     - 有志の方のAPIを使わせてもらった

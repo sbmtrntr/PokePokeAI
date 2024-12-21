@@ -4,7 +4,8 @@ from utils.choice.movement import *
 def choice_action(my_field, opponent_field, turn):
     choices = display_choice(my_field, opponent_field, turn)
     while True:
-        user_input = input("行動を選択してください: ")
+        print("\n行動を選択してください: ", end="")
+        user_input = input()
         if not user_input.isdigit():  # 数字以外の入力をチェック
             print("数字を入力してください")
             continue
@@ -52,7 +53,7 @@ def display_choice(field1, field2, turn):
         choices.append("逃げる")
     if can_hand2bench(field1):
         choices.append("たねポケモンをベンチに出す")
-    if can_evolve(field1, turn):
+    if can_evolve(field1, turn[0]):
         choices.append("進化する")
     if can_use_support(field1, field2):
         choices.append("サポートカードを使用する")
@@ -66,7 +67,7 @@ def display_choice(field1, field2, turn):
         choices.append("攻撃する")
 
     for i, choice in enumerate(choices):
-        print(f"{i+1}. {choice}")
+        print(f"{i+1}. {choice}", end=" ")
     
     return choices
 
